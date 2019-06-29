@@ -9,15 +9,17 @@ Types that can go onto this stack are `Numbers` and `Strings`.
 
 Each instruction can have arguments and return values.
 
+Code is read using an instruction pointer iterating through the code left to right. This instruction pointer can jump backwards or forwards though the program based on the instructions read and the stack.
+
 ## Types
 There are 2 types in IPEL: Numbers and Strings.
 ### Numbers
 Numbers are anything numerical. These include integers and floats. Numbers also represent boolean values: 0-like and negative values are falsy, and everything else is truthy.
 
-Number literals are represented in code through square brackets `[]`, or just a single digit. These will push the number literal to the stack.
+Number literals can only be pushed in a single digit from `0-9`. Additional manipulation will be needed to input larger numbers.
 
 ### Strings
-Strings represent both singular characters and strings. They are delimited through angle brackets `<>`. These will also push to the stack.
+Strings represent both singular characters and strings. `<>` character denotes strings. Strings are always truthy, except for an empty string, which is falsy.
 
 ## Instructions
 ### Arguments and Returns
@@ -35,8 +37,6 @@ Arguments are always taken from the register first, then from the stack via impl
 Character | Returns | Comment
 -|-|-
 `0-9` | number | `0-9` → `STACK`
-`[n]` | number | `n` → `STACK`
-`c` | string | `c` → `STACK`
 `<c>` | string | `c` → `STACK`
 
 #### Bilabials: Stack Operations
@@ -83,10 +83,19 @@ Character | Arguments | Returns | Comment
 `ɮ` | number `a`    | `round(a)` | Rounds `a` to the nearest integer
 
 #### Flow Control
+Some vowels are used as flow control. Certain pairs of vowels are used as delimiters for the flow control structures.
+
+Character | Structure | Comment
+-|-|-
+`ɑ ɒ` | Truthy-Jump | Peek at the stack. If the stack is truthy, jump to the nearest `ɒ`
+`e ɘ` | Falsy-Jump | Peek at the stack. If the stack is falsy, jump to the nearest `ɘ`
+`ɛ ə ɜ` | If-Else | Peek at the stack. If truthy, execute the code immediately after up to `ə`, then jump to `ɜ`. Otherwise, jump to `ə` and execute to `ɜ`.
+`i u` | Loop | Pop `a` from the stack. If truthy, execute the code inside `round(a)` times.
+
 
 #### Clicks: I/O
 Character | Arguments | Returns | Comment
 -|-|-|-
 `!` | | number `a` | Waits for STDIN, then pushes a number to the stack. Will convert any characters to their ASCII values.
-`\|` || string `a` | Waits for STDIN, then pushes a string to the stack. Digits will be considered as text.
+`ǀ` | | string `a` | Waits for STDIN, then pushes a string to the stack. Digits will be considered as text.
 `ʘ` | `a` | | Prints `a` to STDOUT. Prints as strings only (`1a` --> "1a").
