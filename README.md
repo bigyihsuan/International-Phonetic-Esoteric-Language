@@ -88,5 +88,5 @@ Character | Arguments | Returns | Comment
 Character | Arguments | Returns | Comment
 -|-|-|-
 `!` | | number `a` | Waits for STDIN, then pushes a number to the stack. Will convert any characters to their ASCII values.
-`|` || string `a` | Waits for STDIN, then pushes a string to the stack. Digits will be considered as text.
+`\|` || string `a` | Waits for STDIN, then pushes a string to the stack. Digits will be considered as text.
 `ʘ` | `a` | | Prints `a` to STDOUT. Prints as strings only (`1a` --> "1a").
