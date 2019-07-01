@@ -31,7 +31,7 @@ All instructions return to the stack. If an instruction has no return value, it 
 ```
 For instructions that return multiple values, the first value is put into the register, and all other values are pushed to the stack. Because of how stacks work, IPEL uses postfix notation (`(1 2 +) == 3`).
 
-Arguments are always taken from the register first, then from the stack via implicit popping. Any instruction can have any number of arguments, which will be noted below.
+Arguments are always taken from the stack via implicit popping. Any instruction can have any number of arguments, which will be noted below.
 
 ### Instruction Tables
 #### Literal-related
