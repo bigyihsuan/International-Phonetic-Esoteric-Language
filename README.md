@@ -14,21 +14,21 @@ Code is read using an instruction pointer iterating through the code left to rig
 ## Types
 There are 2 types in IPEL: Numbers and Strings.
 ### Numbers
-Numbers are anything numerical. These include integers and floats. Numbers also represent boolean values: 0-like and negative values are falsy, and everything else is truthy.
+Numbers are solely integers. Numbers also represent boolean values: 0 and negative values are falsy, and positive values are truthy.
 
 Number literals can only be pushed in a single digit from `0-9`. Additional manipulation will be needed to input larger numbers.
 
 ### Strings
-Strings represent both singular characters and strings. `<>` character denotes strings. Strings are always truthy, except for an empty string, which is falsy.
+Strings are just sequences as characters. Under the hood, characters are pushed onto the stack as their ASCII values. These are delimited by `<>`.
 
 ## Instructions
 ### Arguments and Returns
 All instructions return to the stack. If an instruction has no return value, it does nothing after execution. As a result, code like `!ʘ` will do this:
 ```python
-!  # Wait for user input; then push to the stack
- ʘ # Pop from the stack; print this value
+!  # Wait for user input; then push to the stack as a number
+ ʘ # Pop from the stack; print this value as a string
 ```
-For instructions that return multiple values, the first value is put into the register, and all other values are pushed to the stack in reverse order.
+For instructions that return multiple values, the first value is put into the register, and all other values are pushed to the stack. Because of how stacks work, IPEL uses postfix notation (`(1 2 +) == 3`).
 
 Arguments are always taken from the register first, then from the stack via implicit popping. Any instruction can have any number of arguments, which will be noted below.
 
@@ -37,7 +37,7 @@ Arguments are always taken from the register first, then from the stack via impl
 Character | Returns | Comment
 -|-|-
 `0-9` | number | `0-9` → `STACK`
-`<c>` | string | `c` → `STACK`
+`<c>` | string | Push the string into the stack, left to right, as their ASCII values
 
 #### Bilabials: Stack Operations
 Bilabials represent stack operations.
@@ -82,20 +82,19 @@ Character | Arguments | Returns | Comment
 `ɬ` | number `a`    | `-a` | Inverts the sign of `a`.
 `ɮ` | number `a`    | `round(a)` | Rounds `a` to the nearest integer
 
-#### Flow Control
+#### Control Flow
 Some vowels are used as flow control. Certain pairs of vowels are used as delimiters for the flow control structures.
 
 Character | Structure | Comment
 -|-|-
-`ɑ ɒ` | Truthy-Jump | Peek at the stack. If the stack is truthy, jump to the nearest `ɒ`
-`e ɘ` | Falsy-Jump | Peek at the stack. If the stack is falsy, jump to the nearest `ɘ`
-`ɛ ə ɜ` | If-Else | Peek at the stack. If truthy, execute the code immediately after up to `ə`, then jump to `ɜ`. Otherwise, jump to `ə` and execute to `ɜ`.
-`i u` | Loop | Pop `a` from the stack. If truthy, execute the code inside `round(a)` times.
+`ɑ ɒ` | Truthy-Jump | On `ɒ`, peek at the stack. If the stack is truthy, jump to the nearest `ɑ`
+`ɘ e` | Falsy-Jump | On `e`, peek at the stack. If the stack is falsy, jump to the nearest `ɘ`
+`ɛ ə ɜ` | If-Else | On `ɛ`, peek at the stack. If truthy, execute the code immediately after up to `ə`, then jump to `ɜ`. Otherwise, jump to `ə` and execute to `ɜ`.
+`œ ɶ` | Loop | On `œ`, pop `a` from the stack. If truthy, execute the code inside `round(a)` times, jumping from `ɶ` to `œ`. Otherwise, jump to `ɶ`
 
 
 #### Clicks: I/O
 Character | Arguments | Returns | Comment
 -|-|-|-
 `!` | | number `a` | Waits for STDIN, then pushes a number to the stack. Will convert any characters to their ASCII values.
-`ǀ` | | string `a` | Waits for STDIN, then pushes a string to the stack. Digits will be considered as text.
-`ʘ` | `a` | | Prints `a` to STDOUT. Prints as strings only (`1a` --> "1a").
+`ʘ` | `a` | | Prints `a` to STDOUT. Prints as a string.
