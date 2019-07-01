@@ -31,7 +31,7 @@ def parse(instruction, pointer, stack, code, flag=""):
             if (instruction in 'ɒ'):
                 peek = stack.peek()
                 end = pointer
-                """ TODO: IMPLEMENT JUMP """
+                """ TODO: IMPLEMENT TRUTHY-JUMP """
     elif (instruction in '!ʘ'):
         if (instruction in '!'):
             print("Give input: ")
