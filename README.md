@@ -15,18 +15,18 @@ Code is read using an instruction pointer iterating through the code left to rig
 ## Types
 There are 2 types in IPEL: Numbers and Strings.
 ### Numbers
-Numbers are solely integers. Numbers also represent boolean values: 0 and negative values are falsy, and positive values are truthy.
+Numbers can be integers or floats. Numbers also represent boolean values: 0 and negative values are falsy, and positive values are truthy.
 
 Number literals can only be pushed in a single digit from `0-9`. Additional manipulation will be needed to input larger numbers.
 
 ### Strings
-Strings are just sequences as characters. Under the hood, characters are pushed onto the stack as their ASCII values. These are delimited by `<>`.
+Strings are just sequences as characters. These are delimited by `<>`.
 
 ## Instructions
 ### Arguments and Returns
 Arguments are always taken from the stack via implicit popping. Any instruction can have any number of arguments, which will be noted below.
 
-All instructions return to the stack. If an instruction has no return value, it does nothing after execution. For instructions that return multiple values, the return values are pushed sequentially (if an instruction returns `a,b`, it will push `a`, then `b`).
+All instructions return output to the stack. If an instruction has no return value, it does nothing after execution. For instructions that return multiple values, the return values are pushed sequentially (if an instruction returns `a,b`, it will push `a`, then `b`).
 
 ### Instructions
 #### Literal-related
@@ -35,27 +35,19 @@ Character | Returns | Comment
 `0-9` | number | `0-9` → `STACK`
 `<c>` | string | Push the string into the stack, left to right, as their ASCII/Unicode values
 
-#### Bilabials: Stack Operations
-Bilabials represent stack operations.
-
-Character | Arguments | Returns | Comment
--|-|-|-
-`p` | `a` | - | Pushes `a` onto the stack
-`b` | - | `a` | Pops the top off the stack
-`m` | - | `a` | Peeks at the top of the stack
-`ɸ` | - | number | Checks if the stack is empty. Truthy i
-`β` | - | number | Checks if the register is empty
+#### Bilabials: [something]
+Bilabials represent [something that will replace this].
 
 #### Labiodentals: String operations
 Labiodentals represent various string operations.
 
 Character | Arguments | Returns | Comment
 -|-|-|-
-`ɱ` | string `a, b` | `ab` | Concatenation
-`f` | string `a`    | number | Length
-`v` | string `a`    | numbers | Converts a string to their numeric value; pushes character by characters
-`ʋ` | string `a`, number `b` | string | Returns the character at that location
-`ⱱ` | string `a`, string `b` | number | Returns the index of that character
+`ɱ` | string `a, b` | `ab` | Concatenation.
+`f` | string `a`    | number | String length. Will peek at the stack, and return the length of the top of the stack as a string.
+`v` | string `a`    | numbers | Converts a string to their numeric value; pushes character by characters.
+`ʋ` | string `a`, number `b` | string | Returns the character at that location, 0-indexed.
+`ⱱ` | string `a`, string `b` | number | Returns the index of the first instance of the character.
 
 #### Dentals, Alveolars, Postalveolars: Mathematics
 Dentals, alveolars, and postaveolars represent mathematical instructions. These are always read from left to right. They all return to `STACK`.
@@ -92,6 +84,6 @@ Character | Structure | Comment
 #### I/O
 Character | Arguments | Returns | Comment
 -|-|-|-
-`ɪ` | | number `a` | Waits for STDIN, then pushes a number to the stack. Will convert any characters to their ASCII/UNICODE values.
+`ɪ` | | number `a` | Waits for STDIN, then pushes a number to the stack. Will convert any characters to their ASCII/Unicode/UNICODE values.
 `o` | `a` | | Prints `a` to STDOUT. Prints a string.
 `ɵ` | `a` | | Prints `a` to STDOUT. Prints a number.
