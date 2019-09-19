@@ -1,5 +1,6 @@
 # International Phonetic Esoteric Language
 WIP
+
 Also known as IPEL. An esoteric, stack-based programming language based around IPA symbols. 100% not associated with the IPA.
 
 ## Basic Information
@@ -23,16 +24,11 @@ Strings are just sequences as characters. Under the hood, characters are pushed 
 
 ## Instructions
 ### Arguments and Returns
-All instructions return to the stack. If an instruction has no return value, it does nothing after execution. As a result, code like `!ʘ` will do this:
-```python
-!  # Wait for user input; then push to the stack as a number
- ʘ # Pop from the stack; print this value as a string
-```
-For instructions that return multiple values, the first value is put into the register, and all other values are pushed to the stack. Because of how stacks work, IPEL uses postfix notation (`(1 2 +) == 3`).
+Arguments are always taken from the stack via implicit popping. Any instruction can have any number of arguments, which will be noted below.
 
-Arguments are always taken from the register first, then from the stack via implicit popping. Any instruction can have any number of arguments, which will be noted below.
+All instructions return to the stack. If an instruction has no return value, it does nothing after execution. For instructions that return multiple values, the return values are pushed sequentially (if an instruction returns `a,b`, it will push `a`, then `b`).
 
-### Instruction Tables
+### Instructions
 #### Literal-related
 Character | Returns | Comment
 -|-|-
@@ -47,8 +43,8 @@ Character | Arguments | Returns | Comment
 `p` | `a` | - | Pushes `a` onto the stack
 `b` | - | `a` | Pops the top off the stack
 `m` | - | `a` | Peeks at the top of the stack
-`ɸ` | - | number | Checks if the stack is empty; `0, 1` → `STACK`
-`β` | - | number | Checks if the register is empty; `0, 1` → `STACK`
+`ɸ` | - | number | Checks if the stack is empty. Truthy i
+`β` | - | number | Checks if the register is empty
 
 #### Labiodentals: String operations
 Labiodentals represent various string operations.
@@ -72,7 +68,7 @@ Character | Arguments | Returns | Comment
 `ð` | number `a, b` | `a / b` | Division; will return 0 if `b == 0`.
 `n` | number `a, b` | `a % b` | Modulo
 `ʃ` | number `a, b` | `a ^ b` | Exponent; Base `a`, exponent `b`
-`ʒ` | number `a, b` | `log a (b)` | Logarithm; Base 'a', exponent `b`
+`ʒ` | number `a, b` | `log a (b)` | Logarithm; Base `a`, exponent `b`
 `s` | number `a, b` | `a >> b`| Bit shift `a` to the right `b` bits
 `z` | number `a, b` | `a << b`| Bit shift `a` to the left `b` bits
 `r` | number `a, b` | `a AND b` | Bitwise AND
@@ -87,8 +83,8 @@ Some vowels are used as flow control. Certain pairs of vowels are used as delimi
 
 Character | Structure | Comment
 -|-|-
-`ɑ ɒ` | Truthy-Jump | On `ɒ`, peek at the stack. If the stack is truthy, jump to the nearest `ɑ`
-`ɘ e` | Falsy-Jump | On `e`, peek at the stack. If the stack is falsy, jump to the nearest `ɘ`
+`ɑ ɒ` | Truthy-Jump | On `ɒ`, peek at the stack. If the stack is truthy, jump to the nearest `ɑ`.
+`ɘ e` | Falsy-Jump | On `e`, peek at the stack. If the stack is falsy, jump to the nearest `ɘ`.
 `ɛ ə ɜ` | If-Else | On `ɛ`, peek at the stack. If truthy, execute the code immediately after up to `ə`, then jump to `ɜ`. Otherwise, jump to `ə` and execute to `ɜ`.
 `œ ɶ` | Loop | On `œ`, pop `a` from the stack. If truthy, execute the code inside `round(a)` times, jumping from `ɶ` to `œ`. Otherwise, jump to `ɶ`
 
