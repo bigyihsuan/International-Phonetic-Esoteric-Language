@@ -37,7 +37,7 @@ Arguments are always taken from the register first, then from the stack via impl
 Character | Returns | Comment
 -|-|-
 `0-9` | number | `0-9` → `STACK`
-`<c>` | string | Push the string into the stack, left to right, as their ASCII values
+`<c>` | string | Push the string into the stack, left to right, as their ASCII/Unicode values
 
 #### Bilabials: Stack Operations
 Bilabials represent stack operations.
@@ -93,8 +93,9 @@ Character | Structure | Comment
 `œ ɶ` | Loop | On `œ`, pop `a` from the stack. If truthy, execute the code inside `round(a)` times, jumping from `ɶ` to `œ`. Otherwise, jump to `ɶ`
 
 
-#### Clicks: I/O
+#### I/O
 Character | Arguments | Returns | Comment
 -|-|-|-
-`!` | | number `a` | Waits for STDIN, then pushes a number to the stack. Will convert any characters to their ASCII values.
-`ʘ` | `a` | | Prints `a` to STDOUT. Prints as a string.
+`ɪ` | | number `a` | Waits for STDIN, then pushes a number to the stack. Will convert any characters to their ASCII/UNICODE values.
+`o` | `a` | | Prints `a` to STDOUT. Prints a string.
+`ɵ` | `a` | | Prints `a` to STDOUT. Prints a number.

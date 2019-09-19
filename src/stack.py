@@ -3,7 +3,7 @@ class Stack:
         self.stack = []
 
     def push(self, ele):
-        if (type(ele) == "<class 'str'>"):
+        if ('str' in type(ele)):
             for c in ele:
                 self.stack.append(ord(ele))
         else:
