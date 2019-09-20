@@ -47,7 +47,7 @@ Character | Arguments | Returns | Comment
 `f` | string `a`    | number | String length. Will peek at the stack, and return the length of the top of the stack as a string.
 `v` | string `a`    | numbers | Converts a string to their numeric value; pushes character by characters.
 `ʋ` | string `a`, number `b` | string | Returns the character at that location, 0-indexed.
-`ⱱ` | string `a`, string `b` | number | Returns the index of the first instance of the character.
+`ⱱ` | number `a` | string | Converts from a number to a character, based on its ASCII/Unicode value.
 
 #### Dentals, Alveolars, Postalveolars: Mathematics
 Dentals, alveolars, and postaveolars represent mathematical instructions. These are always read from left to right. They all return to `STACK`.
@@ -66,7 +66,7 @@ Character | Arguments | Returns | Comment
 `r` | number `a, b` | `a AND b` | Bitwise AND
 `ɾ` | number `a, b` | `a OR b` | Bitwise OR
 `ɹ` | number `a, b` | `a XOR b` | Bitwise XOR
-`l` | number `a`    | `NOT a` | Bitwise NOT (one's complement)
+`l` | number `a`    | `NOT a` | Bitwise NOT
 `ɬ` | number `a`    | `-a` | Inverts the sign of `a`.
 `ɮ` | number `a`    | `round(a)` | Rounds `a` to the nearest integer
 
@@ -84,6 +84,6 @@ Character | Structure | Comment
 #### I/O
 Character | Arguments | Returns | Comment
 -|-|-|-
-`ɪ` | | number `a` | Waits for STDIN, then pushes a number to the stack. Will convert any characters to their ASCII/Unicode/UNICODE values.
+`ɪ` | | number `a` | Waits for STDIN, then pushes a number to the stack. Will convert any characters to their ASCII/Unicode values.
+`i` | | string 'a' | Waits for STDIN, then pushes the string to the stack.
 `o` | `a` | | Prints `a` to STDOUT. Prints a string.
-`ɵ` | `a` | | Prints `a` to STDOUT. Prints a number.

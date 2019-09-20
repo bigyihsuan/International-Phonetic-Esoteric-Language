@@ -19,9 +19,7 @@ def STRING(instruction, stack):
         b = stack.pop()
         stack.push(a[b])
     else if instruction in 'ⱱ':
-        a = stack.pop()
-        b = stack.pop()
-        stack.push(a.find(b))
+        stack.push(chr(stack.pop()))
 
 def MATH(instruction, stack):
     import math as m
@@ -60,3 +58,12 @@ def MATH(instruction, stack):
         stack.push(-stack.pop())
     else if instruction in 'ɮ':
         stack.push(round(stack.pop()))
+
+def IO(instruction, stack):
+    if instruction in 'ɪ':
+        for c in input():
+            stack.push(ord(a))
+    else if instruction in 'i':
+        stack.push(input())
+    else if instruction in 'o':
+        print(stack.pop())
