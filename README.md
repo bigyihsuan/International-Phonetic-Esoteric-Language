@@ -37,6 +37,7 @@ Character | Returns | Comment
 
 #### Bilabials: Stack Utilities
 Bilabials represent various stack utilities.
+
 Character | Arguments | Returns | Comment
 -|-|-|-
 `p` | `a` | | Pop and discard the top element of the stack.
