@@ -76,9 +76,8 @@ def MATH(instruction, stack):
 
 def IO(instruction, stack):
     if instruction in 'ɪ':
-        for c in input():
-            stack.push(ord(c))
+        stack.push(int(input()))
     elif instruction in 'i':
         stack.push(input())
     elif instruction in 'o':
-        print(stack.pop())
+        print(str(stack.pop()))
