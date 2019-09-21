@@ -20,7 +20,7 @@ Numbers can be integers or floats. Numbers also represent boolean values: 0 and 
 Number literals can only be pushed in a single digit from `0-9`. Additional manipulation will be needed to input larger numbers.
 
 ### Strings
-Strings are just sequences as characters. These are delimited by `<>`.
+Strings are just sequences as characters. These are delimited by `<>`. Strings are always truthy and equal to 1.
 
 ## Instructions
 ### Arguments and Returns
@@ -52,7 +52,7 @@ Labiodentals represent various string operations.
 Character | Arguments | Returns | Comment
 -|-|-|-
 `ɱ` | string `a, b` | `ab` | Concatenation.
-`f` | string `a`    | number | String length. Will peek at the stack, and return the length of the top of the stack as a string.
+`f` | string `a`    | number | String length. Will peek at the stack, and return the length of the top element when converted to a string.
 `v` | string `a`    | numbers | Converts a string to their numeric value; pushes character by characters.
 `ʋ` | string `a`, number `b` | string | Returns the character at that location, 0-indexed.
 `ⱱ` | number `a` | string | Converts from a number to a character, based on its ASCII/Unicode value.
@@ -82,7 +82,7 @@ Character | Arguments | Returns | Comment
 Character | Arguments | Returns | Comment
 -|-|-|-
 `ɪ` | | number `a` | Waits for STDIN, then pushes a number to the stack. Will convert any characters to their ASCII/Unicode values.
-`i` | | string 'a' | Waits for STDIN, then pushes the string to the stack.
+`i` | | string `a` | Waits for STDIN, then pushes the string to the stack.
 `o` | `a` | | Prints `a` to STDOUT. Prints a string.
 
 #### Control Flow
