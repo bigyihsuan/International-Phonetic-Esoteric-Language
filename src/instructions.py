@@ -4,66 +4,81 @@ def LITERAL(instruction, stack):
     else:
         stack.push(instruction)
 
+def STACK(instruction, stack):
+    if instruction in 'p':
+        stack.pop()
+    elif instruction in 'b':
+        stack.push(stack.peek())
+    elif instruction in 'ʙ':
+        a = stack[0]
+        b = stack[-1]
+        stack[0] = b
+        stack[-1] = a
+    elif instruction in 'ɸ':
+        stack.push(len(stack))
+    elif instruction in 'β':
+        stack.push(stack[stack.pop()])
+
 def STRING(instruction, stack):
     if instruction in 'ɱ':
         a = stack.pop()
         b = stack.pop()
         stack.push(a + b)
-    else if instruction in 'f':
+    elif instruction in 'f':
         stack.push(len(str(stack.peek())))
-    else if instruction in 'v':
+    elif instruction in 'v':
         for c in stack.pop():
             stack.push(ord(c))
-    else if instruction in `ʋ`:
+    elif instruction in 'ʋ':
         a = stack.pop()
         b = stack.pop()
         stack.push(a[b])
-    else if instruction in 'ⱱ':
+    elif instruction in 'ⱱ':
         stack.push(chr(stack.pop()))
 
 def MATH(instruction, stack):
     import math as m
     if instruction in 't':
         stack.push(stack.pop() + stack.pop())
-    else if instruction in 'd':
+    elif instruction in 'd':
         stack.push(stack.pop() - stack.pop())
-    else if instruction in 'θ':
+    elif instruction in 'θ':
         stack.push(stack.pop() * stack.pop())
-    else if instruction in 'ð':
+    elif instruction in 'ð':
         a = stack.pop()
         b = stack.pop()
         if (b == 0):
             stack.push(0)
         else:
             stack.push(a / b)
-    else if instruction in 'n':
+    elif instruction in 'n':
         stack.push(stack.pop() % stack.pop())
-    else if instruction in 'ʃ':
+    elif instruction in 'ʃ':
         stack.push(stack.pop() ** stack.pop())
-    else if instruction in 'ʒ':
+    elif instruction in 'ʒ':
         stack.push(m.log(stack.pop(), stack.pop()))
-    else if instruction in 's':
+    elif instruction in 's':
         stack.push(stack.pop() + stack.pop())
-    else if instruction in 'z':
+    elif instruction in 'z':
         stack.push(stack.pop() >> stack.pop())
-    else if instruction in 'r':
+    elif instruction in 'r':
         stack.push(stack.pop() << stack.pop())
-    else if instruction in 'ɾ':
+    elif instruction in 'ɾ':
         stack.push(stack.pop() & stack.pop())
-    else if instruction in 'ɹ':
+    elif instruction in 'ɹ':
         stack.push(stack.pop() | stack.pop())
-    else if instruction in 'l':
+    elif instruction in 'l':
         stack.push(~stack.pop())
-    else if instruction in 'ɬ':
+    elif instruction in 'ɬ':
         stack.push(-stack.pop())
-    else if instruction in 'ɮ':
+    elif instruction in 'ɮ':
         stack.push(round(stack.pop()))
 
 def IO(instruction, stack):
     if instruction in 'ɪ':
         for c in input():
-            stack.push(ord(a))
-    else if instruction in 'i':
+            stack.push(ord(c))
+    elif instruction in 'i':
         stack.push(input())
-    else if instruction in 'o':
+    elif instruction in 'o':
         print(stack.pop())

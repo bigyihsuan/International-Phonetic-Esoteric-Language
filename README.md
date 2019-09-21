@@ -35,8 +35,15 @@ Character | Returns | Comment
 `0-9` | number | `0-9` → `STACK`
 `<c>` | string | Push the string into the stack, left to right, as their ASCII/Unicode values
 
-#### Bilabials: [something]
-Bilabials represent [something that will replace this].
+#### Bilabials: Stack Utilities
+Bilabials represent various stack utilities.
+Character | Arguments | Returns | Comment
+-|-|-|-
+`p` | `a` | | Pop and discard the top element of the stack.
+`b` | | `a` | Copy the top element of the stack.
+`ʙ` | | | Swap the top and bottom elements of the stack.
+`ɸ` | | number | Pushes the number of elements in the stack.
+`β` | number | `a` | Pushes the [number]-th element from the bottom.
 
 #### Labiodentals: String operations
 Labiodentals represent various string operations.
@@ -70,6 +77,13 @@ Character | Arguments | Returns | Comment
 `ɬ` | number `a`    | `-a` | Inverts the sign of `a`.
 `ɮ` | number `a`    | `round(a)` | Rounds `a` to the nearest integer
 
+#### I/O
+Character | Arguments | Returns | Comment
+-|-|-|-
+`ɪ` | | number `a` | Waits for STDIN, then pushes a number to the stack. Will convert any characters to their ASCII/Unicode values.
+`i` | | string 'a' | Waits for STDIN, then pushes the string to the stack.
+`o` | `a` | | Prints `a` to STDOUT. Prints a string.
+
 #### Control Flow
 Some vowels are used as flow control. Certain pairs of vowels are used as delimiters for the flow control structures.
 
@@ -77,13 +91,6 @@ Character | Structure | Comment
 -|-|-
 `ɑ ɒ` | Truthy-Jump | On `ɒ`, peek at the stack. If the stack is truthy, jump to the nearest `ɑ`.
 `ɘ e` | Falsy-Jump | On `e`, peek at the stack. If the stack is falsy, jump to the nearest `ɘ`.
+`ɐ` | Jump | Pop the stack. Jumps to the `a`-th instruction, 0-indexed and `round(a)`-ed. If `a` is a string, will jump to the beginning.
 `ɛ ə ɜ` | If-Else | On `ɛ`, peek at the stack. If truthy, execute the code immediately after up to `ə`, then jump to `ɜ`. Otherwise, jump to `ə` and execute to `ɜ`.
 `œ ɶ` | Loop | On `œ`, pop `a` from the stack. If truthy, execute the code inside `round(a)` times, jumping from `ɶ` to `œ`. Otherwise, jump to `ɶ`
-
-
-#### I/O
-Character | Arguments | Returns | Comment
--|-|-|-
-`ɪ` | | number `a` | Waits for STDIN, then pushes a number to the stack. Will convert any characters to their ASCII/Unicode values.
-`i` | | string 'a' | Waits for STDIN, then pushes the string to the stack.
-`o` | `a` | | Prints `a` to STDOUT. Prints a string.

@@ -3,11 +3,7 @@ class Stack:
         self.stack = []
 
     def push(self, ele):
-        if ('str' in type(ele)):
-            for c in ele:
-                self.stack.append(ord(ele))
-        else:
-            self.stack.append(ele)
+        self.stack.append(ele)
 
     def pop(self):
         return self.stack.pop()
