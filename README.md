@@ -78,6 +78,20 @@ Character | Arguments | Returns | Comment
 `ɬ` | number `a`    | `-a` | Inverts the sign of `a`.
 `ɮ` | number `a`    | `round(a)` | Rounds `a` to the nearest integer
 
+#### Retroflexes: Comparisons and Logical Operators
+Retroflex consonants represent comparisons. They (almost) always take 2 arguments. For all instructions, ASCII order is used for strings. Empty strings are always last.
+
+Character | Arguments | Returns | Comment
+-|-|-|-
+`ʈ` | `a, b` | `a > b` | Returns 1 if true, 0 if false.
+`ɖ` | `a, b` | `a < b` | Returns 1 if true, 0 if false.
+`ʂ` | `a, b` | `a >= b` | Returns 1 if true, 0 if false.
+`ʐ` | `a, b` | `a <= b` | Returns 1 if true, 0 if false.
+`ɳ` | `a, b` | `a == b` | Returns 1 if true, 0 if false.
+`ɽ` | `a, b` | `a and b` | Logical AND. Returns 1 if both arguments are truthy, 0 otherwise.
+`ɻ` | `a, b` | `a or b` | Logical OR. Returns 1 if either argument is truthy, 0 otherwise.
+`ɭ` | `a` | `not a` | Logical NOT. Returns 1 if the argument is falsy, 0 otherwise.
+
 #### I/O
 Character | Arguments | Returns | Comment
 -|-|-|-
