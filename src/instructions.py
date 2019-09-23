@@ -74,6 +74,103 @@ def MATH(instruction, stack):
     elif instruction in 'ɮ':
         stack.push(round(stack.pop()))
 
+def LOGICAL(instruction, stack):
+    if instruction in 'ʈ':
+        a = stack.pop()
+        b = stack.pop()
+        if (a == ''):
+            stack.push(0)
+            return
+        if (b == ''):
+            stack.push(1)
+            return
+        if (a > b):
+            stack.push(1)
+        else:
+            stack.push(0)
+    elif instruction in 'ɖ':
+        a = stack.pop()
+        b = stack.pop()
+        if (a == ''):
+            stack.push(1)
+            return
+        if (b == ''):
+            stack.push(0)
+            return
+        if (a < b):
+            stack.push(0)
+        else:
+            stack.push(1)
+    elif instruction in 'ʂ':
+        a = stack.pop()
+        b = stack.pop()
+        if (a == ''):
+            stack.push(0)
+            return
+        if (b == ''):
+            stack.push(1)
+            return
+        if (a >= b):
+            stack.push(1)
+        else:
+            stack.push(0)
+    elif instruction in 'ʐ':
+        a = stack.pop()
+        b = stack.pop()
+        if (a == ''):
+            stack.push(1)
+            return
+        if (b == ''):
+            stack.push(0)
+            return
+        if (a <= b):
+            stack.push(0)
+        else:
+            stack.push(1)
+    elif instruction in 'ɳ':
+        a = stack.pop()
+        b = stack.pop()
+        if (a == b):
+            stack.push(1)
+        else:
+            stack.push(0)
+    elif instruction in 'ɽ':
+        a = stack.pop()
+        b = stack.pop()
+        if (a == '' or a <= 0):
+            a = False
+        else:
+            a = True
+        if (b == '' or b <= 0):
+            b = False
+        else:
+            b = True
+        if (a and b):
+            stack.push(1)
+        else:
+            stack.push(0)
+    elif instruction in 'ɻ':
+        a = stack.pop()
+        b = stack.pop()
+        if (a == '' or a <= 0):
+            a = False
+        else:
+            a = True
+        if (b == '' or b <= 0):
+            b = False
+        else:
+            b = True
+        if (a or b):
+            stack.push(1)
+        else:
+            stack.push(0)
+    elif instruction in 'ɭ':
+        a = stack.pop()
+        if (a == '' or a <= 0):
+            stack.push(0)
+        else:
+            stack.push(1)
+
 def IO(instruction, stack):
     if instruction in 'ɪ':
         stack.push(int(input()))

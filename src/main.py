@@ -42,6 +42,10 @@ while pointer < len(code):
     elif instruction in 'tdθðnʃʒszrɾɹlɬɮ':
         inst.MATH(instruction, stack)
 
+# LOGICAL
+    elif instruciton in 'ʈɖʂʐɳɽɻɭ':
+        inst.LOGICAL(instruction, stack)
+
 # CONTROL FLOW
     elif instruction in 'ɑɒɘeɐɛəɜœɶ':
         if instruction in 'ɐ':
