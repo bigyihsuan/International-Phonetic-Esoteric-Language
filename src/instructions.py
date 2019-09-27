@@ -173,7 +173,12 @@ def LOGICAL(instruction, stack):
 
 def IO(instruction, stack):
     if instruction in 'ɪ':
-        stack.push(int(input()))
+        temp = input()
+        if temp.isnumeric():
+            stack.push(int(temp))
+        else:
+            for c in temp:
+                stack.push(ord(c))
     elif instruction in 'i':
         stack.push(input())
     elif instruction in 'o':
