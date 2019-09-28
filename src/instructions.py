@@ -5,19 +5,35 @@ def LITERAL(instruction, stack):
         stack.push(instruction)
 
 def STACK(instruction, stack):
-    if instruction in 'p':
+    if instruction in 'c':
         stack.pop()
-    elif instruction in 'b':
+    elif instruction in 'ɟ':
         stack.push(stack.peek())
-    elif instruction in 'ʙ':
+    elif instruction in 'ɲ':
         a = stack[0]
         b = stack[-1]
         stack[0] = b
         stack[-1] = a
-    elif instruction in 'ɸ':
+    elif instruction in 'ç':
         stack.push(len(stack))
-    elif instruction in 'β':
+    elif instruction in 'ʝ':
         stack.push(stack[stack.pop()])
+    elif instruction in 'j':
+        stack.rotate(-stack.pop())
+    elif instruciton in 'ʎ':
+        ints, strs = [], []
+        while !stack.isEmpty():
+            ele = stack.pop()
+            if isinstance(ele, int):
+                ints.append(ele)
+            else:
+                strs.append(ele)
+        ints.sort()
+        strs.sort()
+        ints.append(strs)
+        for i in ints:
+            stack.push(i)
+        stack.stack.reverse()
 
 def STRING(instruction, stack):
     if instruction in 'ɱ':

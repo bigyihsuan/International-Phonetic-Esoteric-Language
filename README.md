@@ -35,17 +35,6 @@ Character | Returns | Comment
 `0-9` | number | `0-9` → `STACK`
 `<c>` | string | Push the string into the stack, left to right, as their ASCII/Unicode values
 
-#### Bilabials: Stack Utilities
-Bilabials represent various stack utilities.
-
-Character | Arguments | Returns | Comment
--|-|-|-
-`p` | `a` | | Pop and discard the top element of the stack.
-`b` | | `a` | Copy the top element of the stack.
-`ʙ` | | | Swap the top and bottom elements of the stack.
-`ɸ` | | number | Pushes the number of elements in the stack.
-`β` | number | `a` | Pushes the [number]-th element from the bottom.
-
 #### Labiodentals: String operations
 Labiodentals represent various string operations.
 
@@ -92,6 +81,19 @@ Character | Arguments | Returns | Comment
 `ɻ` | `a, b` | `a or b` | Logical OR. Returns 1 if either argument is truthy, 0 otherwise.
 `ɭ` | `a` | `not a` | Logical NOT. Returns 1 if the argument is falsy, 0 otherwise.
 
+#### Palatals: Stack Utilities
+Palatals represent various stack utilities.
+
+Character | Arguments | Returns | Comment
+-|-|-|-
+`c` | `a` | | Pop and discard the top element of the stack.
+`ɟ` | | `a` | Copy the top element of the stack.
+`ɲ` | | | Swap the top and bottom elements of the stack.
+`ç` | | number | Pushes the number of elements in the stack.
+`ʝ` | number | `a` | Pushes the `number`-th element from the bottom.
+`j` | number | | Rotates the stack `number` elements towards the bottom.
+`ʎ` | | | Sorts the stack. Numbers go before strings.
+
 #### I/O
 Character | Arguments | Returns | Comment
 -|-|-|-
@@ -104,8 +106,8 @@ Some vowels are used as flow control. Certain pairs of vowels are used as delimi
 
 Character | Structure | Comment
 -|-|-
-`ɑ ɒ` | Truthy-Jump | On `ɒ`, peek at the stack. If the stack is truthy, jump to the nearest `ɑ`.
-`ɘ e` | Falsy-Jump | On `e`, peek at the stack. If the stack is falsy, jump to the nearest `ɘ`.
-`ɐ` | Jump | Pop the stack. Jumps to the `a`-th instruction, 0-indexed and `round(a)`-ed. If `a` is a string, will jump to the beginning.
-`ɛ ə ɜ` | If-Else | On `ɛ`, peek at the stack. If truthy, execute the code immediately after up to `ə`, then jump to `ɜ`. Otherwise, jump to `ə` and execute to `ɜ`.
-`œ ɶ` | Loop | On `œ`, pop `a` from the stack. If truthy, execute the code inside `round(a)` times, jumping from `ɶ` to `œ`. Otherwise, jump to `ɶ`
+`ɑ ɒ` | Truthy-Jump | On `ɒ`, pop the stack. If the stack is truthy, jump to the nearest `ɑ`.
+`ɘ e` | Falsy-Jump | On `e`, pop the stack. If the stack is falsy, jump to the nearest `ɘ`.
+`ɐ` | Jump | Pop the stack. Jumps to the `a`-th instruction, 0-indexed and `ceil(a)`-ed. If `a` is a string, will jump to the beginning.
+`ɛ ə ɜ` | If-Else | On `ɛ`, pop the stack. If truthy, execute the code immediately after up to `ə`, then jump to `ɜ`. Otherwise, jump to `ə` and execute to `ɜ` and continue.
+`œ ɶ` | Loop | On `œ`, pop `a` from the stack. If truthy and a number, execute the code inside `ceil(a)` times, jumping from `ɶ` to `œ`. Otherwise, jump to `ɶ`

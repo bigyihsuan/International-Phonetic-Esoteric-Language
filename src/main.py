@@ -16,6 +16,9 @@ falsejump = pointer
 loopstart = pointer
 loopend = pointer
 loopcounter = -1
+elsejump = pointer
+endifjump = pointer
+iftrue = True
 while pointer < len(code):
     instruction = code[pointer]
 # LITERAL
@@ -31,7 +34,7 @@ while pointer < len(code):
         pointer = temp
 
 # STACK
-    elif instruction in 'pbʙɸβ':
+    elif instruction in 'cɟɲçʝjʎ':
         inst.STACK(instruction, stack)
 
 # IO
@@ -52,10 +55,32 @@ while pointer < len(code):
             # Jump to the a-th instruction
             a = stack.pop()
             if isinstance(a, int) or isinstance(a, float):
-                pointer = round(a)
+                pointer = ceil(a)
             elif isinstance(a, str):
                 pointer = 0
                 continue
+        if instruction in 'ɑɒ':
+            # truthy jump back to ɑ
+            if instuction in 'ɑ':
+                truejump = pointer
+            if instuction in 'ɒ':
+                a = stack.pop()
+                if (isinstance(a, int) or isinstance(a, float)) and a > 0:
+                    pointer = truejump
+                    continue
+                elif isinstance(a, str) and a != "":
+                    pointer = truejump
+        if instruction in 'ɘe':
+            # falsy jump back to ɑ
+            if instuction in 'ɘ':
+                falsejump = pointer
+            if instuction in 'e':
+                a = stack.pop()
+                if (isinstance(a, int) or isinstance(a, float)) and a <= 0:
+                    pointer = falsejump
+                    continue
+                elif isinstance(a, str) and a == "":
+                    pointer = falsejump
         if instruction in 'œɶ':
             # Loop round(a) times.
             if instruction in 'ɶ':
@@ -64,19 +89,40 @@ while pointer < len(code):
                 # Else, continue
                 if loopcounter > 0:
                     pointer = loopstart
-                    loopcounter -= 1
+                    stack.push(loopcounter - 1)
             elif instruction in 'œ':
                 # Set the Loop Jump location
                 temp = pointer
                 while code[temp] not in 'ɶ':
                     temp += 1
-                loopstart = pointer
+                loopstart = pointer - 1
                 loopend = temp
                 # If a is truthy, execute round(a) times
                 # Else, continue
                 a = stack.pop()
                 if isinstance(a, str):
-                    loopcounter = 1
-                elif round(a) > 0:
-                    loopcounter = round(a) - 1
+                    continue
+                elif ceil(a) > 0:
+                    loopcounter = ceil(a) - 1
+        if instruction in `ɛəɜ`:
+            # if then else
+            # find the next ə and ɜ
+            temp = pointer
+            while code[temp] != 'ɜ':
+                if code[temp] in `ə`:
+                    elsejump = temp
+            endifjump = temp
+            
+            if instruction in `ɛ`:
+                a = stack.pop()
+                if (isinstance(a, int) or isinstance(a, float)) and a > 0:
+                    iftrue = True
+                elif isinstance(a, str) and a != '':
+                    iftrue = True
+                else:
+                    iftrue = False
+                    pointer = elsejump
+            if instruction in `ə`:
+                if iftrue:
+                    pointer = endifjump
     pointer += 1
