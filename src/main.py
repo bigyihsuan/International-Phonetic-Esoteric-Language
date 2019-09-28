@@ -34,6 +34,10 @@ while pointer < len(code):
         inst.LITERAL(s, stack)
         pointer = temp
 
+# STRING
+    elif instruction in 'qɢʀʁɴχ':
+        inst.STRING(instruction, stack)
+
 # STACK
     elif instruction in 'cɟɲçʝjʎ':
         inst.STACK(instruction, stack)
@@ -112,8 +116,9 @@ while pointer < len(code):
             while code[temp] != 'ɜ':
                 if code[temp] in 'ə':
                     elsejump = temp
+                temp += 1
             endifjump = temp
-            
+
             if instruction in 'ɛ':
                 a = stack.pop()
                 if (isinstance(a, int) or isinstance(a, float)) and a > 0:

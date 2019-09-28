@@ -35,16 +35,17 @@ Character | Returns | Comment
 `0-9` | number | `0-9` → `STACK`
 `<c>` | string | Push the string into the stack, left to right, as their ASCII/Unicode values
 
-#### Labiodentals: String operations
-Labiodentals represent various string operations.
+#### Uvulars: String operations
+Uvulars represent various string operations.
 
 Character | Arguments | Returns | Comment
 -|-|-|-
-`ɱ` | string `a, b` | `ab` | Concatenation.
-`f` | string `a`    | number | String length. Will peek at the stack, and return the length of the top element when converted to a string.
-`v` | string `a`    | numbers | Converts a string to their numeric value; pushes character by characters.
-`ʋ` | string `a`, number `b` | string | Returns the character at that location, 0-indexed.
-`ⱱ` | number `a` | string | Converts from a number to a character, based on its ASCII/Unicode value.
+`q` | string `a, b` | `ab` | Concatenation.
+`ɢ` | string `a`    | number | String length. Will peek at the stack, and return the length of the top element when converted to a string.
+`ʀ` | string `a`    | numbers | Converts a string to their numeric value; pushes character by characters.
+`ʁ` | string `a`    | strings | Splits a string into its individual characters. Will be pushed into the stack in reverse order (first character on top)
+`ɴ` | string `a`, number `b` | string | Returns the character at that location, 0-indexed.
+`χ` | number `a` | string | Converts from a number to a character, based on its ASCII/Unicode value.
 
 #### Dentals, Alveolars, Postalveolars: Mathematics
 Dentals, alveolars, and postaveolars represent mathematical instructions. These are always read from left to right. They all return to `STACK`.

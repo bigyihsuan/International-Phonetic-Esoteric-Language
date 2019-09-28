@@ -19,8 +19,10 @@ def STACK(instruction, stack):
     elif instruction in 'ʝ':
         stack.push(stack[stack.pop()])
     elif instruction in 'j':
-        stack.rotate(-stack.pop())
-    elif instruciton in 'ʎ':
+        a = stack.pop()
+        for i in range(a, 0, -1):
+            stack.push(stack.stack.pop(0))
+    elif instruction in 'ʎ':
         ints, strs = [], []
         while not stack.isEmpty():
             ele = stack.pop()
@@ -36,20 +38,24 @@ def STACK(instruction, stack):
         stack.stack.reverse()
 
 def STRING(instruction, stack):
-    if instruction in 'ɱ':
+    if instruction in 'q':
         a = stack.pop()
         b = stack.pop()
         stack.push(a + b)
-    elif instruction in 'f':
+    elif instruction in 'ɢ':
         stack.push(len(str(stack.peek())))
-    elif instruction in 'v':
+    elif instruction in 'ʀ':
         for c in stack.pop():
             stack.push(ord(c))
-    elif instruction in 'ʋ':
+    elif instruction in 'ʁ':
+        a = str(list(str(stack.pop())).reverse())
+        for c in a:
+            stack.push(c)
+    elif instruction in 'ɴ':
         a = stack.pop()
         b = stack.pop()
         stack.push(a[b])
-    elif instruction in 'ⱱ':
+    elif instruction in 'χ':
         stack.push(chr(stack.pop()))
 
 def MATH(instruction, stack):
@@ -191,6 +197,8 @@ def IO(instruction, stack):
     if instruction in 'ɪ':
         temp = input()
         if temp.isnumeric():
+            stack.push(int(temp))
+        elif temp[0] == '-' and temp[1:].isnumeric():
             stack.push(int(temp))
         else:
             for c in temp:
