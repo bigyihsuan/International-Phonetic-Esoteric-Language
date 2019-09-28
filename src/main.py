@@ -1,6 +1,7 @@
 import sys
 import stack as s
 import instructions as inst
+import maths 
 
 # Command: python.exe .\main.py [code]
 '''
@@ -102,18 +103,18 @@ while pointer < len(code):
                 a = stack.pop()
                 if isinstance(a, str):
                     continue
-                elif ceil(a) > 0:
-                    loopcounter = ceil(a) - 1
-        if instruction in `ɛəɜ`:
+                elif math.ceil(a) > 0:
+                    loopcounter = math.ceil(a) - 1
+        if instruction in 'ɛəɜ':
             # if then else
             # find the next ə and ɜ
             temp = pointer
             while code[temp] != 'ɜ':
-                if code[temp] in `ə`:
+                if code[temp] in 'ə':
                     elsejump = temp
             endifjump = temp
             
-            if instruction in `ɛ`:
+            if instruction in 'ɛ':
                 a = stack.pop()
                 if (isinstance(a, int) or isinstance(a, float)) and a > 0:
                     iftrue = True
@@ -122,7 +123,7 @@ while pointer < len(code):
                 else:
                     iftrue = False
                     pointer = elsejump
-            if instruction in `ə`:
+            if instruction in 'ə':
                 if iftrue:
                     pointer = endifjump
     pointer += 1
