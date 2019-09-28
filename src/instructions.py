@@ -22,7 +22,7 @@ def STACK(instruction, stack):
         stack.rotate(-stack.pop())
     elif instruciton in 'ʎ':
         ints, strs = [], []
-        while !stack.isEmpty():
+        while not stack.isEmpty():
             ele = stack.pop()
             if isinstance(ele, int):
                 ints.append(ele)
