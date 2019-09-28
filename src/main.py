@@ -1,7 +1,7 @@
 import sys
 import stack as s
 import instructions as inst
-import maths 
+import math
 
 # Command: python.exe .\main.py [code]
 '''
