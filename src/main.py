@@ -1,3 +1,5 @@
+# coding=UTF-8
+
 import sys
 import stack as s
 import instructions as inst
@@ -66,9 +68,9 @@ while pointer < len(code):
                 continue
         if instruction in 'ɑɒ':
             # truthy jump back to ɑ
-            if instuction in 'ɑ':
+            if instruction in 'ɑ':
                 truejump = pointer
-            if instuction in 'ɒ':
+            if instruction in 'ɒ':
                 a = stack.pop()
                 if (isinstance(a, int) or isinstance(a, float)) and a > 0:
                     pointer = truejump

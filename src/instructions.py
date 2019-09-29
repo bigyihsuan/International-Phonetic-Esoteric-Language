@@ -1,3 +1,5 @@
+# coding=UTF-8
+
 def LITERAL(instruction, stack):
     if (str.isdigit(instruction)):
         stack.push(int(instruction))
@@ -10,14 +12,14 @@ def STACK(instruction, stack):
     elif instruction in 'ɟ':
         stack.push(stack.peek())
     elif instruction in 'ɲ':
-        a = stack[0]
-        b = stack[-1]
-        stack[0] = b
-        stack[-1] = a
+        a = stack.stack[0]
+        b = stack.stack[-1]
+        stack.stack[0] = b
+        stack.stack[-1] = a
     elif instruction in 'ç':
-        stack.push(len(stack))
+        stack.push(stack.size())
     elif instruction in 'ʝ':
-        stack.push(stack[stack.pop()])
+        stack.push(stack.stack[stack.pop()])
     elif instruction in 'j':
         a = stack.pop()
         for i in range(a, 0, -1):
@@ -32,7 +34,7 @@ def STACK(instruction, stack):
                 strs.append(ele)
         ints.sort()
         strs.sort()
-        ints.append(strs)
+        ints.extend(strs)
         for i in ints:
             stack.push(i)
         stack.stack.reverse()
