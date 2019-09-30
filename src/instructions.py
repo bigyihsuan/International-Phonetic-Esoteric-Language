@@ -10,8 +10,8 @@ def LITERAL(instruction, stack):
 def STRING(instruction, stack):
     if not stack.isEmpty():
         if instruction in 'q' and stack.size() >= 2:
-            a = stack.pop()
-            b = stack.pop()
+            a = str(stack.pop())
+            b = str(stack.pop())
             stack.push(a + b)
         elif instruction in 'ɢ':
             stack.push(len(str(stack.peek())))
@@ -34,76 +34,76 @@ def STACK(instruction, stack):
         if instruction in 'c':
             stack.pop()
         elif instruction in 'ɟ':
-            if not stack.isEmpty():
-                stack.push(stack.peek())
-            elif instruction in 'ɲ' and stack.size() >= 2:
-                a = stack.stack[0]
-                b = stack.stack[1]
-                stack.stack[0] = b
-                stack.stack[1] = a
-            elif instruction in 'ç':
-                stack.push(stack.size())
-            elif instruction in 'ʝ':
-                stack.push(stack.stack[stack.pop()])
-            elif instruction in 'j':
-                a = stack.pop()
-                for i in range(a, 0, -1):
-                    stack.push(stack.stack.pop(0))
-            elif instruction in 'ʎ':
-                ints, strs = [], []
-                while not stack.isEmpty():
-                    ele = stack.pop()
-                    if isinstance(ele, int):
-                        ints.append(ele)
-                    else:
-                        strs.append(ele)
-                        ints.sort()
-                        strs.sort()
-                        ints.extend(strs)
-                        for i in ints:
-                            stack.push(i)
-                            stack.stack.reverse()
+            stack.push(stack.peek())
+        elif instruction in 'ɲ' and stack.size() >= 2:
+            a = stack.pop()
+            b = stack.pop()
+            stack.push(a)
+            stack.push(b)
+        elif instruction in 'ç':
+            stack.push(stack.size())
+        elif instruction in 'ʝ':
+            stack.push(stack.stack[stack.pop()])
+        elif instruction in 'j':
+            a = stack.pop()
+            for i in range(a, 0, -1):
+                stack.push(stack.stack.pop(0))
+        elif instruction in 'ʎ':
+            ints, strs = [], []
+            while not stack.isEmpty():
+                ele = stack.pop()
+                if isinstance(ele, int):
+                    ints.append(ele)
+                else:
+                    strs.append(ele)
+                    ints.sort()
+                    strs.sort()
+                    ints.extend(strs)
+                    for i in ints:
+                        stack.push(i)
+                        stack.stack.reverse()
 
 def MATH(instruction, stack):
     import math as m
     if not stack.isEmpty():
-        if stack.size() >= 2:
-            if instruction in 't':
-                stack.push(stack.pop() + stack.pop())
-            elif instruction in 'd':
-                stack.push(stack.pop() - stack.pop())
-            elif instruction in 'θ':
-                stack.push(stack.pop() * stack.pop())
-            elif instruction in 'ð':
-                a = stack.pop()
-                b = stack.pop()
-                if (b == 0):
-                    stack.push(0)
+        if instruction in 't' and stack.size() >= 2:
+            stack.push(stack.pop() + stack.pop())
+        elif instruction in 'd' and stack.size() >= 2:
+            stack.push(stack.pop() - stack.pop())
+        elif instruction in 'θ' and stack.size() >= 2:
+            stack.push(stack.pop() * stack.pop())
+        elif instruction in 'ð' and stack.size() >= 2:
+            a = stack.pop()
+            b = stack.pop()
+            if (b == 0):
+                stack.push(0)
+            else:
+                if (str(a / b)[-1] == '0'):
+                    stack.push(a // b)
                 else:
                     stack.push(a / b)
-            elif instruction in 'n':
-                stack.push(stack.pop() % stack.pop())
-            elif instruction in 'ʃ':
-                stack.push(stack.pop() ** stack.pop())
-            elif instruction in 'ʒ':
-                stack.push(m.log(stack.pop(), stack.pop()))
-            elif instruction in 's':
-                stack.push(stack.pop() + stack.pop())
-            elif instruction in 'z':
-                stack.push(stack.pop() >> stack.pop())
-            elif instruction in 'r':
-                stack.push(stack.pop() << stack.pop())
-            elif instruction in 'ɾ':
-                stack.push(stack.pop() & stack.pop())
-            elif instruction in 'ɹ':
-                stack.push(stack.pop() | stack.pop())
-        else:
-            if instruction in 'l':
-                stack.push(~stack.pop())
-            elif instruction in 'ɬ':
-                stack.push(-stack.pop())
-            elif instruction in 'ɮ':
-                stack.push(round(stack.pop()))
+        elif instruction in 'n' and stack.size() >= 2:
+            stack.push(stack.pop() % stack.pop())
+        elif instruction in 'ʃ' and stack.size() >= 2:
+            stack.push(stack.pop() ** stack.pop())
+        elif instruction in 'ʒ' and stack.size() >= 2:
+            stack.push(m.log(stack.pop(), stack.pop()))
+        elif instruction in 's' and stack.size() >= 2:
+            stack.push(stack.pop() + stack.pop())
+        elif instruction in 'z' and stack.size() >= 2:
+            stack.push(stack.pop() >> stack.pop())
+        elif instruction in 'r' and stack.size() >= 2:
+            stack.push(stack.pop() << stack.pop())
+        elif instruction in 'ɾ' and stack.size() >= 2:
+            stack.push(stack.pop() & stack.pop())
+        elif instruction in 'ɹ' and stack.size() >= 2:
+            stack.push(stack.pop() | stack.pop())
+        elif instruction in 'l':
+            stack.push(~stack.pop())
+        elif instruction in 'ɬ':
+            stack.push(-stack.pop())
+        elif instruction in 'ɮ':
+            stack.push(ceil(stack.pop()))
 
 def LOGICAL(instruction, stack):
     if not stack.isEmpty():

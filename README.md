@@ -77,7 +77,7 @@ Character | Arguments | Returns | Comment
 `t` | number `a, b` | `a + b` | Addition
 `d` | number `a, b` | `a - b` | Subtraction
 `θ` | number `a, b` | `a * b` | Multiplication
-`ð` | number `a, b` | `a / b` | Division; will return 0 if `b == 0`.
+`ð` | number `a, b` | `a / b` | Division; will return 0 if `b == 0`. If `a` and `b` are `int`s, will perform `a // b`.
 `n` | number `a, b` | `a % b` | Modulo
 `ʃ` | number `a, b` | `a ^ b` | Exponent; Base `a`, exponent `b`
 `ʒ` | number `a, b` | `log a (b)` | Logarithm; Base `a`, exponent `b`
@@ -88,7 +88,7 @@ Character | Arguments | Returns | Comment
 `ɹ` | number `a, b` | `a XOR b` | Bitwise XOR
 `l` | number `a`    | `NOT a` | Bitwise NOT
 `ɬ` | number `a`    | `-a` | Inverts the sign of `a`.
-`ɮ` | number `a`    | `round(a)` | Rounds `a` to the nearest integer
+`ɮ` | number `a`    | `ceil(a)` | Rounds `a` to the largest integer
 
 #### Retroflexes: Comparisons and Logical Operators
 Retroflex consonants represent comparisons. They (almost) always take 2 arguments. For all instructions, ASCII order is used for strings. Empty strings are always last.

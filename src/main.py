@@ -6,10 +6,7 @@ import instructions as inst
 import math
 
 # Command: python.exe .\main.py [code]
-'''
-Go to folder: cd "D:\Programming\GitHub Repos\International-Phonetic-Esoteric-Language\src"
-Run: python.exe .\main.py ""
-'''
+
 code = list(sys.argv[1])
 stack = s.Stack()
 
@@ -66,19 +63,18 @@ while pointer < len(code):
             elif isinstance(a, str):
                 pointer = 0
                 continue
-        if instruction in 'ɑɒ':
+        elif instruction in 'ɑɒ':
             # truthy jump back to ɑ
             if instruction in 'ɑ':
                 truejump = pointer
             if instruction in 'ɒ':
                 if not stack.isEmpty():
                     a = stack.pop()
-                if (isinstance(a, int) or isinstance(a, float)) and a > 0:
-                    pointer = truejump
-                    continue
-                elif isinstance(a, str) and a != "":
-                    pointer = truejump
-        if instruction in 'ɘe':
+                    if (isinstance(a, int) or isinstance(a, float)) and a > 0:
+                        pointer = truejump
+                    elif isinstance(a, str) and a != "":
+                        pointer = truejump
+        elif instruction in 'ɘe':
             # falsy jump back to ɑ
             if instuction in 'ɘ':
                 falsejump = pointer
@@ -90,31 +86,31 @@ while pointer < len(code):
                     continue
                 elif isinstance(a, str) and a == "":
                     pointer = falsejump
-        if instruction in 'œɶ':
-            # Loop round(a) times.
+        elif instruction in 'œɶ':
+            # Loop ceil(a) times.
             if instruction in 'ɶ':
                 # Check the loop counter
                 # If > 0, jump to the start of the loop
                 # Else, continue
                 if loopcounter > 0:
                     pointer = loopstart
-                    stack.push(loopcounter - 1)
+                    loopcounter -= 1
             elif instruction in 'œ':
                 # Set the Loop Jump location
                 temp = pointer
                 while code[temp] not in 'ɶ':
                     temp += 1
                 loopstart = pointer - 1
-                loopend = temp
+                loopend = temp + 1
                 # If a is truthy, execute round(a) times
                 # Else, continue
-                if not stack.isEmpty():
+                if not stack.isEmpty() and loopcounter < 0:
                     a = stack.pop()
-                if isinstance(a, str):
-                    continue
-                elif math.ceil(a) > 0:
-                    loopcounter = math.ceil(a) - 1
-        if instruction in 'ɛəɜ':
+                    if isinstance(a, str):
+                        continue
+                    elif math.ceil(a) > 0:
+                        loopcounter = math.ceil(a) - 1
+        elif instruction in 'ɛəɜ':
             # if then else
             # find the next ə and ɜ
             temp = pointer
