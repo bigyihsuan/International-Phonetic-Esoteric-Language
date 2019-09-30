@@ -57,7 +57,7 @@ Character | Arguments | Returns | Comment
 -|-|-|-
 `c` | `a` | | Pop and discard the top element of the stack.
 `ɟ` | | `a` | Copy the top element of the stack.
-`ɲ` | | | Swap the top and bottom elements of the stack.
+`ɲ` | | | Swap the first and second elements of the stack.
 `ç` | | number | Pushes the number of elements in the stack.
 `ʝ` | number | `a` | Pushes the `number`-th element from the bottom.
 `j` | number | | Rotates the stack `number` elements towards the bottom.
