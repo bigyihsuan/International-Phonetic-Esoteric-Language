@@ -99,7 +99,7 @@ def MATH(instruction, stack):
                 stack.push(stack.pop() | stack.pop())
         else:
             if instruction in 'l':
-            stack.push(~stack.pop())
+                stack.push(~stack.pop())
             elif instruction in 'ɬ':
                 stack.push(-stack.pop())
             elif instruction in 'ɮ':
