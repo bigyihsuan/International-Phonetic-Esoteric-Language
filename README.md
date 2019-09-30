@@ -3,6 +3,12 @@ WIP
 
 Also known as IPEL. An esoteric, stack-based programming language based around IPA symbols. 100% not associated with the IPA.
 
+## Running
+Clone the repo, navigate to it, and run
+```
+python3 main.py "code here"
+```
+
 ## Basic Information
 IPEL uses a single stack to store and handle information. All instructions push to the stack after executing.
 

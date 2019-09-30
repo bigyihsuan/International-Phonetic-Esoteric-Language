@@ -215,6 +215,6 @@ def IO(instruction, stack):
             for c in temp:
                 stack.push(ord(c))
     elif instruction in 'i':
-        stack.push(input())
+        stack.push(str(input()))
     elif instruction in 'o' and not stack.isEmpty():
         print(str(stack.pop()))
