@@ -49,21 +49,21 @@ def STACK(instruction, stack):
                 a = stack.pop()
                 for i in range(a, 0, -1):
                     stack.push(stack.stack.pop(0))
-                elif instruction in 'ʎ':
-                    ints, strs = [], []
-                    while not stack.isEmpty():
-                        ele = stack.pop()
-                        if isinstance(ele, int):
-                            ints.append(ele)
-                        else:
-                            strs.append(ele)
-                            ints.sort()
-                            strs.sort()
-                            ints.extend(strs)
-                            for i in ints:
-                                stack.push(i)
-                                stack.stack.reverse()
-                                
+            elif instruction in 'ʎ':
+                ints, strs = [], []
+                while not stack.isEmpty():
+                    ele = stack.pop()
+                    if isinstance(ele, int):
+                        ints.append(ele)
+                    else:
+                        strs.append(ele)
+                        ints.sort()
+                        strs.sort()
+                        ints.extend(strs)
+                        for i in ints:
+                            stack.push(i)
+                            stack.stack.reverse()
+
 def MATH(instruction, stack):
     import math as m
     if not stack.isEmpty():
