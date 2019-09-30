@@ -71,7 +71,8 @@ while pointer < len(code):
             if instruction in 'ɑ':
                 truejump = pointer
             if instruction in 'ɒ':
-                a = stack.pop()
+                if not stack.isEmpty():
+                    a = stack.pop()
                 if (isinstance(a, int) or isinstance(a, float)) and a > 0:
                     pointer = truejump
                     continue
@@ -82,7 +83,8 @@ while pointer < len(code):
             if instuction in 'ɘ':
                 falsejump = pointer
             if instuction in 'e':
-                a = stack.pop()
+                if not stack.isEmpty():
+                    a = stack.pop()
                 if (isinstance(a, int) or isinstance(a, float)) and a <= 0:
                     pointer = falsejump
                     continue
@@ -106,7 +108,8 @@ while pointer < len(code):
                 loopend = temp
                 # If a is truthy, execute round(a) times
                 # Else, continue
-                a = stack.pop()
+                if not stack.isEmpty():
+                    a = stack.pop()
                 if isinstance(a, str):
                     continue
                 elif math.ceil(a) > 0:
@@ -122,7 +125,8 @@ while pointer < len(code):
             endifjump = temp
 
             if instruction in 'ɛ':
-                a = stack.pop()
+                if not stack.isEmpty():
+                    a = stack.pop()
                 if (isinstance(a, int) or isinstance(a, float)) and a > 0:
                     iftrue = True
                 elif isinstance(a, str) and a != '':

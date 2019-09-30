@@ -22,6 +22,9 @@ Number literals can only be pushed in a single digit from `0-9`. Additional mani
 ### Strings
 Strings are just sequences as characters. These are delimited by `<>`. Strings are always truthy and equal to 1.
 
+## The Stack
+The stack holds the two types above and nothing else: numbers and strings. Please note that if an instruction tries to peek or pop at the empty stack will fail and be skipped.
+
 ## Instructions
 ### Arguments and Returns
 Arguments are always taken from the stack via implicit popping. Any instruction can have any number of arguments, which will be noted below.
@@ -33,7 +36,7 @@ All instructions return output to the stack. If an instruction has no return val
 Character | Returns | Comment
 -|-|-
 `0-9` | number | `0-9` → `STACK`
-`<c>` | string | Push the string into the stack, left to right, as their ASCII/Unicode values
+`<c>` | string | Push the string into the stack.
 
 #### Uvulars: String operations
 Uvulars represent various string operations.
@@ -46,6 +49,19 @@ Character | Arguments | Returns | Comment
 `ʁ` | string `a`    | strings | Splits a string into its individual characters. Will be pushed into the stack in reverse order (first character on top)
 `ɴ` | string `a`, number `b` | string | Returns the character at that location, 0-indexed.
 `χ` | number `a` | string | Converts from a number to a character, based on its ASCII/Unicode value.
+
+#### Palatals: Stack Utilities
+Palatals represent various stack utilities.
+
+Character | Arguments | Returns | Comment
+-|-|-|-
+`c` | `a` | | Pop and discard the top element of the stack.
+`ɟ` | | `a` | Copy the top element of the stack.
+`ɲ` | | | Swap the top and bottom elements of the stack.
+`ç` | | number | Pushes the number of elements in the stack.
+`ʝ` | number | `a` | Pushes the `number`-th element from the bottom.
+`j` | number | | Rotates the stack `number` elements towards the bottom.
+`ʎ` | | | Sorts the stack. Numbers go before strings.
 
 #### Dentals, Alveolars, Postalveolars: Mathematics
 Dentals, alveolars, and postaveolars represent mathematical instructions. These are always read from left to right. They all return to `STACK`.
@@ -82,18 +98,6 @@ Character | Arguments | Returns | Comment
 `ɻ` | `a, b` | `a or b` | Logical OR. Returns 1 if either argument is truthy, 0 otherwise.
 `ɭ` | `a` | `not a` | Logical NOT. Returns 1 if the argument is falsy, 0 otherwise.
 
-#### Palatals: Stack Utilities
-Palatals represent various stack utilities.
-
-Character | Arguments | Returns | Comment
--|-|-|-
-`c` | `a` | | Pop and discard the top element of the stack.
-`ɟ` | | `a` | Copy the top element of the stack.
-`ɲ` | | | Swap the top and bottom elements of the stack.
-`ç` | | number | Pushes the number of elements in the stack.
-`ʝ` | number | `a` | Pushes the `number`-th element from the bottom.
-`j` | number | | Rotates the stack `number` elements towards the bottom.
-`ʎ` | | | Sorts the stack. Numbers go before strings.
 
 #### I/O
 Character | Arguments | Returns | Comment
