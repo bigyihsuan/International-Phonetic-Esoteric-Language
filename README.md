@@ -41,7 +41,7 @@ All instructions return output to the stack. If an instruction has no return val
 #### Literal-related
 Character | Returns | Comment
 -|-|-
-`0-9` | number | `0-9` → `STACK`
+`0-9A-F` | number | Pushes the integer literal. `A-F` pushes `10-15` like in hexadecimal, and is case-sensitive.
 `<c>` | string | Push the string into the stack.
 
 #### Uvulars: String operations

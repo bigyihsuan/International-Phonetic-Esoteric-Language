@@ -22,7 +22,7 @@ iftrue = True
 while pointer < len(code):
     instruction = code[pointer]
 # LITERAL
-    if instruction in '0123456789':
+    if instruction in '0123456789ABCDEF':
         inst.LITERAL(instruction, stack)
     elif instruction in '<':
         s = ''

@@ -1,8 +1,10 @@
 # coding=UTF-8
 
 def LITERAL(instruction, stack):
-    if (str.isdigit(instruction)):
+    if str.isdigit(instruction):
         stack.push(int(instruction))
+    elif instruction in 'ABCDEF':
+        stack.push(ord(instruction) - 55)
     else:
         stack.push(instruction)
 
