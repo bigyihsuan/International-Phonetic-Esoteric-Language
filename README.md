@@ -23,7 +23,7 @@ There are 2 types in IPEL: Numbers and Strings.
 ### Numbers
 Numbers can be integers or floats. Numbers also represent boolean values: 0 and negative values are falsy, and positive values are truthy.
 
-Number literals can only be pushed in a single digit from `0-9`. Additional manipulation will be needed to input larger numbers.
+Number literals can only be pushed in a single digit from `0-F` hex. Additional manipulation will be needed to input larger numbers.
 
 ### Strings
 Strings are just sequences as characters. These are delimited by `<>`. Strings are always truthy and equal to 1.
