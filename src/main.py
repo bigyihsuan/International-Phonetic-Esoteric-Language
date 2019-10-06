@@ -76,9 +76,9 @@ while pointer < len(code):
                         pointer = truejump
         elif instruction in 'ɘe':
             # falsy jump back to ɑ
-            if instuction in 'ɘ':
+            if instruction in 'ɘ':
                 falsejump = pointer
-            if instuction in 'e':
+            if instruction in 'e':
                 if not stack.isEmpty():
                     a = stack.pop()
                 if (isinstance(a, int) or isinstance(a, float)) and a <= 0:
