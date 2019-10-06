@@ -59,7 +59,7 @@ while pointer < len(code):
             # Jump to the a-th instruction
             a = stack.pop()
             if isinstance(a, int) or isinstance(a, float):
-                pointer = ceil(a)
+                pointer = math.ceil(a)
             elif isinstance(a, str):
                 pointer = 0
                 continue
