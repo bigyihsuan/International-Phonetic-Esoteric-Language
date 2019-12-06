@@ -4,10 +4,7 @@ WIP
 Also known as IPEL. An esoteric, stack-based programming language based around IPA symbols. 100% not associated with the IPA.
 
 ## Running
-Clone the repo, navigate to it, and run
-```
-python3 main.py "code here"
-```
+TODO
 
 ## Basic Information
 IPEL uses a single stack to store and handle information. All instructions push to the stack after executing.
@@ -36,6 +33,8 @@ The stack holds the two types above and nothing else: numbers and strings. Pleas
 Arguments are always taken from the stack via implicit popping. Any instruction can have any number of arguments, which will be noted below.
 
 All instructions return output to the stack. If an instruction has no return value, it does nothing after execution. For instructions that return multiple values, the return values are pushed sequentially (if an instruction returns `a,b`, it will push `a`, then `b`).
+
+An equivalent instruction in postfix notation demonstrates how the arguments are ordered.
 
 ### Instructions
 #### Literal-related
@@ -74,20 +73,20 @@ Dentals, alveolars, and postaveolars represent mathematical instructions. These 
 
 Character | Arguments | Returns | Comment
 -|-|-|-
-`t` | number `a, b` | `a + b` | Addition
-`d` | number `a, b` | `a - b` | Subtraction
-`θ` | number `a, b` | `a * b` | Multiplication
-`ð` | number `a, b` | `a / b` | Division; will return 0 if `b == 0`. If `a` and `b` are `int`s, will perform `a // b`.
-`n` | number `a, b` | `a % b` | Modulo
-`ʃ` | number `a, b` | `a ^ b` | Exponent; Base `a`, exponent `b`
-`ʒ` | number `a, b` | `log a (b)` | Logarithm; Base `a`, exponent `b`
-`s` | number `a, b` | `a >> b`| Bit shift `a` to the right `b` bits
-`z` | number `a, b` | `a << b`| Bit shift `a` to the left `b` bits
-`r` | number `a, b` | `a AND b` | Bitwise AND
-`ɾ` | number `a, b` | `a OR b` | Bitwise OR
-`ɹ` | number `a, b` | `a XOR b` | Bitwise XOR
-`l` | number `a`    | `NOT a` | Bitwise NOT
-`ɬ` | number `a`    | `-a` | Inverts the sign of `a`.
+`t` | number `a, b` | `a b +` | Addition
+`d` | number `a, b` | `a b -` | Subtraction
+`θ` | number `a, b` | `a b *` | Multiplication
+`ð` | number `a, b` | `a b /` | Division; will return 0 if `b == 0`. If `a` and `b` are `int`s, will perform `a // b`.
+`n` | number `a, b` | `a b %` | Modulo
+`ʃ` | number `a, b` | `a b ^` | Exponent; Base `a`, exponent `b`
+`ʒ` | number `a, b` | `a b log` | Logarithm; Base `a`, exponent `b`
+`s` | number `a, b` | `a b >>`| Bit shift `a` to the right `b` bits
+`z` | number `a, b` | `a b <<`| Bit shift `a` to the left `b` bits
+`r` | number `a, b` | `a b AND` | Bitwise AND
+`ɾ` | number `a, b` | `a b OR` | Bitwise OR
+`ɹ` | number `a, b` | `a b XOR` | Bitwise XOR
+`l` | number `a`    | `a NOT` | Bitwise NOT
+`ɬ` | number `a`    | `a-` | Inverts the sign of `a`.
 `ɮ` | number `a`    | `ceil(a)` | Rounds `a` to the largest integer
 
 #### Retroflexes: Comparisons and Logical Operators
@@ -95,14 +94,14 @@ Retroflex consonants represent comparisons. They (almost) always take 2 argument
 
 Character | Arguments | Returns | Comment
 -|-|-|-
-`ʈ` | `a, b` | `a > b` | Returns 1 if true, 0 if false.
-`ɖ` | `a, b` | `a < b` | Returns 1 if true, 0 if false.
-`ʂ` | `a, b` | `a >= b` | Returns 1 if true, 0 if false.
-`ʐ` | `a, b` | `a <= b` | Returns 1 if true, 0 if false.
-`ɳ` | `a, b` | `a == b` | Returns 1 if true, 0 if false.
-`ɽ` | `a, b` | `a and b` | Logical AND. Returns 1 if both arguments are truthy, 0 otherwise.
-`ɻ` | `a, b` | `a or b` | Logical OR. Returns 1 if either argument is truthy, 0 otherwise.
-`ɭ` | `a` | `not a` | Logical NOT. Returns 1 if the argument is falsy, 0 otherwise.
+`ʈ` | `a, b` | `a b >` | Returns 1 if true, 0 if false.
+`ɖ` | `a, b` | `a b <` | Returns 1 if true, 0 if false.
+`ʂ` | `a, b` | `a b >=` | Returns 1 if true, 0 if false.
+`ʐ` | `a, b` | `a b <=` | Returns 1 if true, 0 if false.
+`ɳ` | `a, b` | `a b ==` | Returns 1 if true, 0 if false.
+`ɽ` | `a, b` | `a b and` | Logical AND. Returns 1 if both arguments are truthy, 0 otherwise.
+`ɻ` | `a, b` | `a b or` | Logical OR. Returns 1 if either argument is truthy, 0 otherwise.
+`ɭ` | `a` | `a not` | Logical NOT. Returns 1 if the argument is falsy, 0 otherwise.
 
 
 #### I/O
@@ -110,7 +109,7 @@ Character | Arguments | Returns | Comment
 -|-|-|-
 `ɪ` | | number `a` | Waits for STDIN, then pushes a number to the stack. Will convert any characters to their ASCII/Unicode values.
 `i` | | string `a` | Waits for STDIN, then pushes the string to the stack.
-`o` | `a` | | Prints `a` to STDOUT. Prints a string.
+`o` | `a` | | Prints `a` to STDOUT as a string.
 
 #### Control Flow
 Some vowels are used as flow control. Certain pairs of vowels are used as delimiters for the flow control structures.
