@@ -1,0 +1,59 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Programming\\GitHub Repos\\International-Phonetic-Esoteric-Language\\src\\International-Phonetic-Esoteric-Language\\International-Phonetic-Esoteric-Language.csproj": {}
+  },
+  "projects": {
+    "D:\\Programming\\GitHub Repos\\International-Phonetic-Esoteric-Language\\src\\International-Phonetic-Esoteric-Language\\International-Phonetic-Esoteric-Language.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Programming\\GitHub Repos\\International-Phonetic-Esoteric-Language\\src\\International-Phonetic-Esoteric-Language\\International-Phonetic-Esoteric-Language.csproj",
+        "projectName": "International-Phonetic-Esoteric-Language",
+        "projectPath": "D:\\Programming\\GitHub Repos\\International-Phonetic-Esoteric-Language\\src\\International-Phonetic-Esoteric-Language\\International-Phonetic-Esoteric-Language.csproj",
+        "packagesPath": "C:\\Users\\bigyi\\.nuget\\packages\\",
+        "outputPath": "D:\\Programming\\GitHub Repos\\International-Phonetic-Esoteric-Language\\src\\International-Phonetic-Esoteric-Language\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\bigyi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp2.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp2.1": {
+          "dependencies": {
+            "Microsoft.NETCore.App": {
+              "target": "Package",
+              "version": "[2.1.0, )",
+              "autoReferenced": true
+            }
+          },
+          "imports": [
+            "net461"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      }
+    }
+  }
+}
