@@ -20,7 +20,7 @@ There are 2 types in IPEL: Numbers and Strings.
 ### Numbers
 Numbers can be integers or floats. Numbers also represent boolean values: 0 and negative values are falsy, and positive values are truthy.
 
-Number literals can only be pushed in a single digit from `0-F` hex. Additional manipulation will be needed to input larger numbers.
+Number literals can be pushed in as a single digit from `0-F` hex, or with square brackets `[NUM]`.
 
 ### Strings
 Strings are just sequences as characters. These are delimited by `<>`. Strings are always truthy and equal to 1.
@@ -40,7 +40,8 @@ An equivalent instruction in postfix notation demonstrates how the arguments are
 #### Literal-related
 Character | Returns | Comment
 -|-|-
-`0-9A-F` | number | Pushes the integer literal. `A-F` pushes `10-15` like in hexadecimal, and is case-sensitive.
+`0-9A-Fa-f` | number | Pushes the hexadecimal number literal. Pushes a single digit in `[0,15]` inclusive.
+`[NUMBER]` | number | Pushes the hexadecimal number literal within the square brackets.
 `<c>` | string | Push the string into the stack.
 
 #### Uvulars: String operations
@@ -82,10 +83,10 @@ Character | Arguments | Returns | Comment
 `ʒ` | number `a, b` | `a b log` | Logarithm; Base `a`, exponent `b`
 `s` | number `a, b` | `a b >>`| Bit shift `a` to the right `b` bits
 `z` | number `a, b` | `a b <<`| Bit shift `a` to the left `b` bits
-`r` | number `a, b` | `a b AND` | Bitwise AND
-`ɾ` | number `a, b` | `a b OR` | Bitwise OR
-`ɹ` | number `a, b` | `a b XOR` | Bitwise XOR
-`l` | number `a`    | `a NOT` | Bitwise NOT
+`r` | number `a, b` | `a b &` | Bitwise AND
+`ɾ` | number `a, b` | `a b |` | Bitwise OR
+`ɹ` | number `a, b` | `a b ^` | Bitwise XOR
+`l` | number `a`    | `a ~` | Bitwise NOT
 `ɬ` | number `a`    | `a-` | Inverts the sign of `a`.
 `ɮ` | number `a`    | `ceil(a)` | Rounds `a` to the largest integer
 
@@ -99,9 +100,9 @@ Character | Arguments | Returns | Comment
 `ʂ` | `a, b` | `a b >=` | Returns 1 if true, 0 if false.
 `ʐ` | `a, b` | `a b <=` | Returns 1 if true, 0 if false.
 `ɳ` | `a, b` | `a b ==` | Returns 1 if true, 0 if false.
-`ɽ` | `a, b` | `a b and` | Logical AND. Returns 1 if both arguments are truthy, 0 otherwise.
-`ɻ` | `a, b` | `a b or` | Logical OR. Returns 1 if either argument is truthy, 0 otherwise.
-`ɭ` | `a` | `a not` | Logical NOT. Returns 1 if the argument is falsy, 0 otherwise.
+`ɽ` | `a, b` | `a b &&` | Logical AND. Returns 1 if both arguments are truthy, 0 otherwise.
+`ɻ` | `a, b` | `a b ||` | Logical OR. Returns 1 if either argument is truthy, 0 otherwise.
+`ɭ` | `a` | `a !` | Logical NOT. Returns 1 if the argument is falsy, 0 otherwise.
 
 
 #### I/O
@@ -109,9 +110,9 @@ Character | Arguments | Returns | Comment
 -|-|-|-
 `ɪ` | | number `a` | Waits for STDIN, then pushes a number to the stack. Will convert any characters to their ASCII/Unicode values.
 `i` | | string `a` | Waits for STDIN, then pushes the string to the stack.
-`o` | `a` | | Prints `a` to STDOUT as a string.
+`o` | `a` | | Prints `a` to STDOUT as a string with trailing newline.
 
-#### Control Flow
+#### Vowels: Control Flow
 Some vowels are used as flow control. Certain pairs of vowels are used as delimiters for the flow control structures.
 
 Character | Structure | Comment
@@ -120,4 +121,25 @@ Character | Structure | Comment
 `ɘ e` | Falsy-Jump | On `e`, pop the stack. If the stack is falsy, jump to the nearest `ɘ`.
 `ɐ` | Jump | Pop the stack. Jumps to the `a`-th instruction, 0-indexed and `ceil(a)`-ed. If `a` is a string, will jump to the beginning.
 `ɛ ə ɜ` | If-Else | On `ɛ`, pop the stack. If truthy, execute the code immediately after up to `ə`, then jump to `ɜ`. Otherwise, jump to `ə` and execute to `ɜ` and continue.
-`œ ɶ` | Loop | On `œ`, pop `a` from the stack. If truthy and a number, execute the code inside `ceil(a)` times, jumping from `ɶ` to `œ`. Otherwise, jump to `ɶ`
+`æ œ` | For Loop | On `æ`, pop `a`. If `a` is a number and `a >= 0`, the code between `æ` and `œ` will be executed `ceil(a)` times.
+
+#### Glottals: Functions
+Functions are not actually true "functions", per se, since they do not take input, and are more like procedures since they act directly on the stack.
+
+Functions must be declared before they are called. If not, the interpreter will ignore it.
+
+Functions are declared and called as the following, whitespace omitted:
+```
+ʢ name ʡʕ code ʔ
+{ name }
+```
+`name` can contain any non-whitespace character. Anything located between `ʡʕ` is ignored.
+
+Functions can be declared in functions and can be called outside of the function it is declared in (all functions are global).
+
+##### Examples:
+Remember that whitespace is removed:
+```
+ʢ1*2+3ʡ ʕtθʔ AAB {1*2+3}
+ʢ1-2/3ʡ ʕðdʔ [1234] [AB] [CD] {1-2/3}
+```
