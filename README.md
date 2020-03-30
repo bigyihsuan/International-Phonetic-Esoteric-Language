@@ -7,103 +7,152 @@ Also known as IPEL. An esoteric, stack-based programming language based around I
 TODO
 
 ## Basic Information
-IPEL uses a single stack to store and handle information. All instructions push to the stack after executing.
+IPEL uses three stacks: two value stacks, and an execution stack. The value stacks are read-writable. The execution stack is used internally to handle execution of code; it is read-only.
 
-Types that can go onto this stack are `Numbers` and `Strings`.
+Code is run by pushing values into the value stack and instructions into the instruction stack. See below for the types of IPEL.
 
-Each instruction can have arguments and return values.
+## The Value Stacks
+The value stack holds the two types above and nothing else: numbers and strings. Please note that if an instruction tries to peek or pop an empty value stack, it will nop and be skipped.
 
-Code is read using an instruction pointer iterating through the code left to right. This instruction pointer can jump backwards or forwards though the program based on the instructions read and the stack.
+There are two value stacks: the `Unvoiced` stack (U stack) and the `Voiced` stack (V stack). By default, values are pushed onto the U stack.
+
+### Voice Switching
+To change the stack that values are pushed onto, `U` and `V` are used as voicing flags, changing the voicing to `Unvoiced` and `Voiced` respectively. This continues until the interpreter encounters another voicing flag, or the end of the program.
+
+## The Execution Stack
+The execution stack (E stack) stores the location in the code to return to after executing a function. When a function is called, the location of the instruction following it is pushed into the E stack. When the function returns, the interpreter pops the E stack and jumps back to the location popped.
 
 ## Types
 There are 2 types in IPEL: Numbers and Strings.
-### Numbers
-Numbers can be integers or floats. Numbers also represent boolean values: 0 and negative values are falsy, and positive values are truthy.
 
-Number literals can be pushed in as a single digit from `0-F` hex, or with square brackets `[NUM]`.
+### Numbers
+A number is any real number. Numbers also represent boolean values: 0 and negative values are falsy, and positive values are truthy.
+
+Integers can be pushed in as a single decimal digit from `0-9`, or any number of decimal digits within square brackets `[12345]`.
+
+Floats can be pushed in using the multidigit notation: `[123.456]`. Note this means the value `1f` will need to be pushed in as `[1.0]`.
+
+```
+Example (before -- after)
+-------------------------
+7 ( -- 7)
+78 ( -- 7 8)
+[1.23] ( -- 1.23)
+1[3.3]0 ( -- 1 3.3 0)
+[3.5] ( -- 3.5)
+```
 
 ### Strings
-Strings are just sequences as characters. These are delimited by `<>`. Strings are always truthy and equal to 1.
+Strings are sequences of characters with length 0 or greater. These are delimited by `"`. Strings are always truthy and equal to 1 when converted to a number.
 
-## The Stack
-The stack holds the two types above and nothing else: numbers and strings. Please note that if an instruction tries to peek or pop at the empty stack will fail and be skipped.
+#### Escape Sequences
+`\` preceding certain characters will escape it according to the [Python escape sequences](https://docs.python.org/3/reference/lexical_analysis.html#string-and-bytes-literals).
+
+```
+Example (before -- after)
+-------------------------
+"abc" ( -- "abc" )
+"a""b""c" ( -- "a" "b" "c")
+"" ( -- "" )
+"a \
+b" ( -- "a b")
+"\n" ( -- "\n")
+"\"<>" ( -- "\"<>")
+"'hello'" (-- "'hello'")
+```
+
 
 ## Instructions
-### Arguments and Returns
-Arguments are always taken from the stack via implicit popping. Any instruction can have any number of arguments, which will be noted below.
+Instructions are denoted as letters in the [International Phonetic Alphabet](https://en.wikipedia.org/wiki/International_Phonetic_Alphabet) (IPA).
 
-All instructions return output to the stack. If an instruction has no return value, it does nothing after execution. For instructions that return multiple values, the return values are pushed sequentially (if an instruction returns `a,b`, it will push `a`, then `b`).
+The stack that an instruction works on is dependent on the current voicing.
 
-An equivalent instruction in postfix notation demonstrates how the arguments are ordered.
+#### Comments
+Comments are characters surrounded by parentheses `(like this)`.
 
-### Instructions
-#### Literal-related
-Character | Returns | Comment
+Comments end when a closing parenthesis `)` appears.
+
+```
+(this is a comment)
+(This is a comment (not nested comment)
+(comment with
+    a newline and tab)
+```
+
+#### Literal-Related
+Character | Pushes | Comment
 -|-|-
-`0-9A-Fa-f` | number | Pushes the hexadecimal number literal. Pushes a single digit in `[0,15]` inclusive.
-`[NUMBER]` | number | Pushes the hexadecimal number literal within the square brackets.
-`<c>` | string | Push the string into the stack.
+`0-9` | number | Pushes the decimal number literal.
+`[NUMBER]` | number | Pushes the decimal number literal within the square brackets.
+`"STRING"` | string | Push the string into the stack.
+`U` | - | Sets the voicing to `Unvoiced`.
+`V` | - | Sets the voicing to `Voiced`.
 
-#### Uvulars: String operations
-Uvulars represent various string operations.
 
-Character | Arguments | Returns | Comment
--|-|-|-
-`q` | string `a, b` | `ab` | Concatenation.
-`ɢ` | string `a`    | number | String length. Will peek at the stack, and return the length of the top element when converted to a string.
-`ʀ` | string `a`    | numbers | Converts a string to their numeric value; pushes character by characters.
-`ʁ` | string `a`    | strings | Splits a string into its individual characters. Will be pushed into the stack in reverse order (first character on top)
-`ɴ` | string `a`, number `b` | string | Returns the character at that location, 0-indexed.
-`χ` | number `a` | string | Converts from a number to a character, based on its ASCII/Unicode value.
+#### Plosives/Stops: Stack Utilities
+Plosives modify the stack.
 
-#### Palatals: Stack Utilities
-Palatals represent various stack utilities.
+Instruction | Stack Effect | Comment
+-|-|-
+`p` | `(a -- )` | Pop and discard the top element of the stack.
+`b` | `(a -- a a)` | Push the top element of the stack.
+`t` | `( -- a)` | Push the number of elements in the stack.
+`d` | `(a -- b)` | Push the `a`-th element from the bottom.
+`ʈ` | `(a b -- b a)` | Swap the first and second elements of the stack.
+`ɖ` | `(a -- )` | Rotate the stack `a` times towards the bottom.
+`c` | `(d b a c -- d c b a)` | Sort the stack. Numbers go before strings. Lower values on top.
+`k` | `A(a -- ) B( -- a)`  |  Pop the top of the current stack and push it onto the other one.
+`g` | `A( -- a) B(a -- )`  |  Pop the top of the other stack and push it onto the current one.
 
-Character | Arguments | Returns | Comment
--|-|-|-
-`c` | `a` | | Pop and discard the top element of the stack.
-`ɟ` | | `a` | Copy the top element of the stack.
-`ɲ` | | | Swap the first and second elements of the stack.
-`ç` | | number | Pushes the number of elements in the stack.
-`ʝ` | number | `a` | Pushes the `number`-th element from the bottom.
-`j` | number | | Rotates the stack `number` elements towards the bottom.
-`ʎ` | | | Sorts the stack. Numbers go before strings.
+#### Approximates and Laterals: Comparisons and Logical Operators
+Approximates and laterals represent comparisons. For all instructions, `1` is pushed if true, and `0` if false.
 
-#### Dentals, Alveolars, Postalveolars: Mathematics
-Dentals, alveolars, and postaveolars represent mathematical instructions. These are always read from left to right. They all return to `STACK`.
+ASCII/Unicode order is used for strings. Empty strings are first, followed by shorter stings.
 
-Character | Arguments | Returns | Comment
--|-|-|-
-`t` | number `a, b` | `a b +` | Addition
-`d` | number `a, b` | `a b -` | Subtraction
-`θ` | number `a, b` | `a b *` | Multiplication
-`ð` | number `a, b` | `a b /` | Division; will return 0 if `b == 0`. If `a` and `b` are `int`s, will perform `a // b`.
-`n` | number `a, b` | `a b %` | Modulo
-`ʃ` | number `a, b` | `a b ^` | Exponent; Base `a`, exponent `b`
-`ʒ` | number `a, b` | `a b log` | Logarithm; Base `a`, exponent `b`
-`s` | number `a, b` | `a b >>`| Bit shift `a` to the right `b` bits
-`z` | number `a, b` | `a b <<`| Bit shift `a` to the left `b` bits
-`r` | number `a, b` | `a b &` | Bitwise AND
-`ɾ` | number `a, b` | `a b |` | Bitwise OR
-`ɹ` | number `a, b` | `a b ^` | Bitwise XOR
-`l` | number `a`    | `a ~` | Bitwise NOT
-`ɬ` | number `a`    | `a-` | Inverts the sign of `a`.
-`ɮ` | number `a`    | `ceil(a)` | Rounds `a` to the largest integer
+Character | Stack Effect | Comment
+-|-|-
+`ɹ` | `(b a -- a>b )` | Greater than
+`ɻ` | `(b a -- a>=b )` | Greater than or equal to
+`l` | `(b a -- a<b )` | Less than
+`ɭ` | `(b a -- a<=b )` | Less than or equal to
+`ʋ` | `(b a -- a==b )` | Equal to
+`ł` | `(b a -- a&&b )` | Logical AND
+`ɮ` | `(b a -- a||b )` | Logical OR
+`ʎ` | `(b a -- a^^b)` | Logical XOR
+`ʟ` | `(a -- !a)` | Logical NOT
 
-#### Retroflexes: Comparisons and Logical Operators
-Retroflex consonants represent comparisons. They (almost) always take 2 arguments. For all instructions, ASCII order is used for strings. Empty strings are always last.
+#### Frontal Fricatives, Taps/Flaps, Trills: Mathematics
+Fricatives, taps, flaps, and trills represent mathematical instructions.
 
-Character | Arguments | Returns | Comment
--|-|-|-
-`ʈ` | `a, b` | `a b >` | Returns 1 if true, 0 if false.
-`ɖ` | `a, b` | `a b <` | Returns 1 if true, 0 if false.
-`ʂ` | `a, b` | `a b >=` | Returns 1 if true, 0 if false.
-`ʐ` | `a, b` | `a b <=` | Returns 1 if true, 0 if false.
-`ɳ` | `a, b` | `a b ==` | Returns 1 if true, 0 if false.
-`ɽ` | `a, b` | `a b &&` | Logical AND. Returns 1 if both arguments are truthy, 0 otherwise.
-`ɻ` | `a, b` | `a b ||` | Logical OR. Returns 1 if either argument is truthy, 0 otherwise.
-`ɭ` | `a` | `a !` | Logical NOT. Returns 1 if the argument is falsy, 0 otherwise.
+Character | Stack Effect | Comment
+-|-|-
+`s` | `(b a -- a+b)` | Addition
+`z` | `(b a -- a-b)` | Subtraction
+`f` | `(b a -- a*b)` | Multiplication
+`v` | `(b a -- a/b)` | Division; will return 0 if `b == 0`. If `a` and `b` are integers, will perform `a // b`.
+`ⱱ` | `(b a -- a%b)` | Modulo (Labiodental Tap ⱱ)
+`ʃ` | `(b a -- a**b)` | Exponent; Base `a`, exponent `b`
+`ʒ` | `(b a -- log(a, b)` | Logarithm; Base `a`, exponent `b`
+`θ` | `(b a -- a>>b)` | Bit shift `a` to the right `b` bits
+`ð` | `(b a -- a<<b)` | Bit shift `a` to the left `b` bits
+`ʂ` | `(b a -- a&b)` | Bitwise AND
+`ʐ` | `(b a -- a|b)` | Bitwise OR
+`ɕ` | `(b a -- a^b)` | Bitwise XOR
+`r` | `(a -- !a)` | Bitwise NOT
+`ɾ` | `(a -- -a)` | Inverts the sign of `a`.
+`ɽ` | `(a -- ceil(a))` | Rounds `a` to the largest integer
 
+#### Back Fricatives, Taps/Flaps, Trills: String operations
+Back fricatives, taps, flaps, and trills represent instructions that handle strings.
+
+Character | Stack Effect | Comment
+-|-|-
+`x` | `(def abc -- abcdef)` | Concatenation.
+`ɣ` | `(a -- a n)` | String length. Will peek at the stack, and return the length of the top element when converted to a string.
+`χ` | `(a -- c)` | Converts a number to a character, based on its ASCII/Unicode value.
+`ʁ` | `(abc -- p o n)` | Converts a string to its ASCII/Unicode value. Will push character by character in reverse order.
+`ʀ` | `(abc -- c b a)` | Splits a string into its individual characters. Will be pushed into the stack in reverse order.
+`h` | `(abc n -- o)` | Returns the character at `n`, 0-indexed.
 
 #### I/O
 Character | Arguments | Returns | Comment
@@ -136,10 +185,3 @@ Functions are declared and called as the following, whitespace omitted:
 `name` can contain any non-whitespace character. Anything located between `ʡʕ` is ignored.
 
 Functions can be declared in functions and can be called outside of the function it is declared in (all functions are global).
-
-##### Examples:
-Remember that whitespace is removed:
-```
-ʢ1*2+3ʡ ʕtθʔ AAB {1*2+3}
-ʢ1-2/3ʡ ʕðdʔ [1234] [AB] [CD] {1-2/3}
-```
