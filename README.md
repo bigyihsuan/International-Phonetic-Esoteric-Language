@@ -22,8 +22,20 @@ To change the stack that values are pushed onto, `U` and `V` are used as voicing
 ## The Execution Stack
 The execution stack (E stack) stores the location in the code to return to after executing a function. When a function is called, the location of the instruction following it is pushed into the E stack. When the function returns, the interpreter pops the E stack and jumps back to the location popped.
 
+## Comments
+Comments are characters surrounded by parentheses `(like this)`.
+
+Comments end when a closing parenthesis `)` appears.
+
+```
+(this is a comment)
+(This is a comment (not nested comment)
+(comment with
+    a newline and tab)
+```
+
 ## Types
-There are 2 types in IPEL: Numbers and Strings.
+There are 3 types in IPEL: Numbers, Strings, and Lists.
 
 ### Numbers
 A number is any real number. Numbers also represent boolean values: 0 and negative values are falsy, and positive values are truthy.
@@ -42,8 +54,26 @@ Example (before -- after)
 [3.5] ( -- 3.5)
 ```
 
+### Lists
+Lists are data structures in IPEL that can hold any number of elements of any type. Lists are not limited to a single type; they can hold any and all of the three types.
+
+Lists are created using a curly braces `{stuff}`. List elements are separated using periods `.`.
+
+```
+Example (before -- after)
+-------------------------
+{} ( -- []) (empty list)
+    {1.2.3} ( -- [1, 2, 3])
+    {[1.2]."string".3} ( -- [1.2, "string", 3])
+    {{"nested"}.{"list".{"in list"}}."yeah"}
+    ( -- [["nested"], ["list", ["in list"]], "yeah"])
+
+```
+
 ### Strings
-Strings are sequences of characters with length 0 or greater. These are delimited by `"`. Strings are always truthy and equal to 1 when converted to a number.
+Strings are lists of characters with length 0 or greater. These are delimited by `"`. Strings are always truthy and equal to 1 when converted to a number.
+
+All instructions that work on lists work with strings.
 
 #### Escape Sequences
 `\` preceding certain characters will escape it according to the [Python escape sequences](https://docs.python.org/3/reference/lexical_analysis.html#string-and-bytes-literals).
@@ -67,17 +97,6 @@ Instructions are denoted as letters in the [International Phonetic Alphabet](htt
 
 The stack that an instruction works on is dependent on the current voicing.
 
-#### Comments
-Comments are characters surrounded by parentheses `(like this)`.
-
-Comments end when a closing parenthesis `)` appears.
-
-```
-(this is a comment)
-(This is a comment (not nested comment)
-(comment with
-    a newline and tab)
-```
 
 #### Literal-Related
 Character | Pushes | Comment
@@ -104,22 +123,21 @@ Instruction | Stack Effect | Comment
 `k` | `A(a -- ) B( -- a)`  |  Pop the top of the current stack and push it onto the other one.
 `g` | `A( -- a) B(a -- )`  |  Pop the top of the other stack and push it onto the current one.
 
-#### Approximates and Laterals: Comparisons and Logical Operators
+#### Central Vowels: Comparisons and Logical Operators
 Approximates and laterals represent comparisons. For all instructions, `1` is pushed if true, and `0` if false.
 
 ASCII/Unicode order is used for strings. Empty strings are first, followed by shorter stings.
 
 Character | Stack Effect | Comment
 -|-|-
-`ɹ` | `(b a -- a>b )` | Greater than
-`ɻ` | `(b a -- a>=b )` | Greater than or equal to
-`l` | `(b a -- a<b )` | Less than
-`ɭ` | `(b a -- a<=b )` | Less than or equal to
-`ʋ` | `(b a -- a==b )` | Equal to
-`ł` | `(b a -- a&&b )` | Logical AND
-`ɮ` | `(b a -- a||b )` | Logical OR
-`ʎ` | `(b a -- a^^b)` | Logical XOR
-`ʟ` | `(a -- !a)` | Logical NOT
+`ɨ` | `(b a -- a>b )` | Greater than
+`ʉ` | `(b a -- a>=b )` | Greater than or equal to
+`ə` | `(b a -- a==b )` | Equal to
+`ɘ` | `(b a -- a<b )` | Less than
+`ɵ` | `(b a -- a<=b )` | Less than or equal to
+`ɜ` | `(b a -- a&&b )` | Logical AND
+`ɞ` | `(b a -- a||b )` | Logical OR
+`ɐ` | `(a -- !a)` | Logical NOT
 
 #### Frontal Fricatives, Taps/Flaps, Trills: Mathematics
 Fricatives, taps, flaps, and trills represent mathematical instructions.
@@ -142,35 +160,24 @@ Character | Stack Effect | Comment
 `ɾ` | `(a -- -a)` | Inverts the sign of `a`.
 `ɽ` | `(a -- ceil(a))` | Rounds `a` to the largest integer
 
-#### Back Fricatives, Taps/Flaps, Trills: String operations
-Back fricatives, taps, flaps, and trills represent instructions that handle strings.
+#### Back Fricatives, Taps/Flaps, Trills: List operations
+Back fricatives, taps, flaps, and trills represent operations on lists. String operations are also in this section.
 
 Character | Stack Effect | Comment
 -|-|-
-`x` | `(def abc -- abcdef)` | Concatenation.
-`ɣ` | `(a -- a n)` | String length. Will peek at the stack, and return the length of the top element when converted to a string.
-`χ` | `(a -- c)` | Converts a number to a character, based on its ASCII/Unicode value.
+`x` | `(abc def -- abcdef)` | Concatenation.
+`ɣ` | `(a -- a n)` | List length. Will peek at the stack, and return the length of the top element when converted to a string.
+`ʀ` | `(abc -- c b a)` | Splits a list into its individual elements. Will be pushed into the stack in reverse order.
+`h` | `(abc n -- abc e)` | Returns the element `e` at `n`, 0-indexed.
+`χ` | `(a -- c)` | Converts a number to a single-character string, based on its ASCII/Unicode value.
 `ʁ` | `(abc -- p o n)` | Converts a string to its ASCII/Unicode value. Will push character by character in reverse order.
-`ʀ` | `(abc -- c b a)` | Splits a string into its individual characters. Will be pushed into the stack in reverse order.
-`h` | `(abc n -- o)` | Returns the character at `n`, 0-indexed.
 
 #### I/O
-Character | Arguments | Returns | Comment
+Character | Stack Effect | Comment
 -|-|-|-
-`ɪ` | | number `a` | Waits for STDIN, then pushes a number to the stack. Will convert any characters to their ASCII/Unicode values.
-`i` | | string `a` | Waits for STDIN, then pushes the string to the stack.
-`o` | `a` | | Prints `a` to STDOUT as a string with trailing newline.
-
-#### Vowels: Control Flow
-Some vowels are used as flow control. Certain pairs of vowels are used as delimiters for the flow control structures.
-
-Character | Structure | Comment
--|-|-
-`ɑ ɒ` | Truthy-Jump | On `ɒ`, pop the stack. If the stack is truthy, jump to the nearest `ɑ`.
-`ɘ e` | Falsy-Jump | On `e`, pop the stack. If the stack is falsy, jump to the nearest `ɘ`.
-`ɐ` | Jump | Pop the stack. Jumps to the `a`-th instruction, 0-indexed and `ceil(a)`-ed. If `a` is a string, will jump to the beginning.
-`ɛ ə ɜ` | If-Else | On `ɛ`, pop the stack. If truthy, execute the code immediately after up to `ə`, then jump to `ɜ`. Otherwise, jump to `ə` and execute to `ɜ` and continue.
-`æ œ` | For Loop | On `æ`, pop `a`. If `a` is a number and `a >= 0`, the code between `æ` and `œ` will be executed `ceil(a)` times.
+`ɪ` |  | Waits for STDIN, then pushes a number to the stack. Will convert any characters to their ASCII/Unicode values.
+`i` |  | Waits for STDIN, then pushes the string to the stack.
+`o` |  | Prints `a` to STDOUT as a string with trailing newline.
 
 #### Glottals: Functions
 Functions are not actually true "functions", per se, since they do not take input, and are more like procedures since they act directly on the stack.
@@ -185,3 +192,13 @@ Functions are declared and called as the following, whitespace omitted:
 `name` can contain any non-whitespace character. Anything located between `ʡʕ` is ignored.
 
 Functions can be declared in functions and can be called outside of the function it is declared in (all functions are global).
+
+## Control Structure: Conditional Jump
+There is a single control statement in IPEL: the conditional jump.
+
+When the interpreter encounters the conditional jump, it will pop from the currently voiced stack. If truthy, it will pop a number `n`. Then, execution will jump to the `n`th instruction, 0-indexed.
+
+
+Character | Stack Effect | Comment
+-|-|-
+`ʜ` | `(n c -- )` |  Conditional Jump: If `c` is truthy, jump to the `n`th instruction
