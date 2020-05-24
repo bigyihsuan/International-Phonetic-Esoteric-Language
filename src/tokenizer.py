@@ -25,23 +25,7 @@ TEXT = any non-whitespace character
 NONDIG = TEXT without DIGIT
 DIGIT = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 """
-from enum import Flag, auto
-
-class Token(Flag):
-    ERR = auto() # Error
-    DONE = auto() # When EOF reached
-    # Constants
-    NUMBER = auto()
-    STRING = auto()
-    LABEL = auto()
-    LIST = auto()
-    # instructions
-    INSTRUCTION = auto()
-    # Functions and Labels
-    FUNDECL = auto()
-    FUNCALL = auto()
-
-
+import enums
 
 class Lexeme:
     """
@@ -62,7 +46,7 @@ class Lexeme:
     def __ne__(self, other):
         return self.token != other.token
 
-class Instruction:
+class IInstruction:
     """
     An interface representing an instruction.
     """
@@ -73,11 +57,11 @@ class Instruction:
         """
         pass
 
-class Number(Instruction):
-    """ Pushes a number """
+class Literal(Instruction):
+    """ Pushes a Literal. Literals are Numbers or Lists """
     def __init__(self, value, stack):
         self.value = value
         self.stack = stack
-
     def eval(self):
         self.stack.push(self.value)
+
