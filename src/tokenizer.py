@@ -14,7 +14,7 @@ Code = {Code} (FunCall | DoLoop | CountLoop | LabelCreate | LabelJump | INSTRUCT
 FunDecl = "<" (NONDIG {TEXT}) ">/" Code "/"
 FunCall = "<" (NONDIG {TEXT}) ">"
 Comment = "(" TEXT ")"
-LabelCreate = "ʎ❬" TEXT "❭"
+LabelCreate = "❬" TEXT "❭"
 LabelJump = "ʟ❬" TEXT "❭"
 
 INSTRUCTION = check readme for all instructions (conditional skip in here)
@@ -35,9 +35,8 @@ class Lexeme:
         self.token = Token.ERR
         self.instructionNumber = -1
 
-    def __init__(self, token, instructionNumber, lexeme):
+    def __init__(self, token, lexeme):
         self.token = token
-        self.instructionNumber = instructionNumber
         self.lexeme = lexeme
 
     def __eq__(self, other):
@@ -45,23 +44,3 @@ class Lexeme:
 
     def __ne__(self, other):
         return self.token != other.token
-
-class IInstruction:
-    """
-    An interface representing an instruction.
-    """
-    def eval():
-        """
-        Called when evaluating the instruction.
-        Usually will be implemented as pushes and pops, and ops.
-        """
-        pass
-
-class Literal(Instruction):
-    """ Pushes a Literal. Literals are Numbers or Lists """
-    def __init__(self, value, stack):
-        self.value = value
-        self.stack = stack
-    def eval(self):
-        self.stack.push(self.value)
-

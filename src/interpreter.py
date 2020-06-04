@@ -5,15 +5,28 @@ unvoicedStack = []
 voicedStack = []
 
 labels = {} # Maps a str label to an int index in code
-state = E.State().BEGIN
+tokens = [] # List of tokens.
+
+executionStack = []
+state = E.State.BEGIN
+
+stderr = sys.stderr
 
 if (len(sys.argv) == 1):
     # Take code from stdin
-    code = sys.stdin
+    source = sys.stdin
 else:
     # Take code from the given file
-    code = open(sys.argv[1], "r")
+    source = open(sys.argv[1], "r")
 
-for line in code.readlines():
-    for character in line.strip():
-        pass
+while True:
+    c = source.read(1)
+    if not c:
+        state = E.State.END
+        break
+    if state == E.State.BEGIN:
+        if c == '\n': # ignore newlines
+            continue
+        if c in '(': # comment
+            state = E.State.COMMENT
+

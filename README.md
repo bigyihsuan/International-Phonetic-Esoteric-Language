@@ -218,7 +218,7 @@ Control structures in IPEL change where the instruction pointer goes next.
 | Character  | Stack Effect | Comment                                                      |
 | ---------- | ------------ | ------------------------------------------------------------ |
 | `ʌ`        | `(con -- )`  | Conditional Skip: If `con` is truthy, skip the next instruction. |
-| `ʎ❬label❭` | `( -- )`     | Label: Signifies a label at the location of `ʎ❬label❭` with the name `str`. |
+| `❬label❭` | `( -- )`     | Label: Signifies a label at the location of `❬label❭` with the name `str`. |
 | `ʟ❬label❭` | `( -- )`     | Go-To Label: Jumps execution to the instruction after `ʎ❬label❭`. |
 
 ### Conditional Skip
@@ -227,10 +227,10 @@ The Conditional Skip pops the currently voiced stack for a value `con`. If `con`
 
 ### Labels and Go-To Label
 
-The instructions `ʎ` and `ʟ` use the special syntax `❬label❭` following them to define arbitrary locations in the code to jump to.
+Labels allow for arbitrary destinations for jumps in execution within an IPEL program.
 
 Labels are delimited by angle brackets `❬label❭`. Labels can have any string within the brackets, stopping at the first `❭`.
 
-`ʎ` before a label creates a label at that location. `ʟ` before a label will unconditionally jump execution to the instruction following given label.
+`ʟ` before a label will unconditionally jump the execution pointer to the given label.
 
-Conditional jumps can be created using a combination of comparison/logical operators, conditional skip, and labels.
+Conditional jumps can be created using a combination of comparison/logical operators, a conditional skip, labels, and a `ʟ`.

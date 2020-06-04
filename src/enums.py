@@ -15,13 +15,39 @@ class Token(Flag):
     FUNCALL = auto()
 
 class State(Flag):
-    """ Represents the interpreter state. """
+    """
+    Represents the interpreter state.
+    """
     BEGIN = auto()
-    INNUM = auto()
-    INSTRING = auto()
-    INLIST = auto()
-    INCOMMENT = auto()
-    INLABEL = auto()
-    INFUNNAME = auto()
-    INFUNDEF = auto()
+    END = auto()
+
+    COMMENT = auto()
+
+    """
+    States representing numbers:
+    DIGIT = [0-9]
+    MULTIDIGIT = {[0-9]+}
+    FLOAT = {[0-9]+(\.[0-9]+)+}
+    """
+    DIGIT = auto()
+    MULTIDIGIT = auto()
+    FLOAT = auto()
+
+    STRING = auto()
+    LIST = auto()
+
+    LABEL = auto()
+    FUNNAME = auto()
+    FUNDEF = auto()
+
+    """
+    Represents the 'default' state the interpreter is in while parsing.
+    If it is not in one of the above, it is in this.
+    """
+    COMMAND = auto()
+
+    """
+    Error state.
+    """
+    ERR = auto()
 

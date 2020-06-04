@@ -1,0 +1,65 @@
+graph LR
+    BEGIN
+    END
+    COMMENT
+    DIGIT
+    MULTIDIGIT
+    FLOAT
+    STRING
+    LIST
+    FUNNAME
+    FUNDEF
+    FUNCALL
+    LABEL
+    COMMAND
+
+    BEGIN -- "(" --> COMMENT -- ")" --> END
+    COMMENT -- "[^)]*" --> COMMENT
+    %% any number of non-) characters
+
+    %% Numbers
+    BEGIN -- "[0-9]" --> DIGIT --> END
+    BEGIN -- "{" --> MULTIDIGIT
+    subgraph Number
+        MULTIDIGIT -- "[0-9]+" --> MULTIDIGIT
+        FLOAT -- "[0-9]*" --> FLOAT
+        MULTIDIGIT -- "." --> MULTIFLOAT
+
+    end
+    MULTIDIGIT -- "}" --> END
+    MULTIDIGIT -- "else" --> ERR
+    MULTIFLOAT -- "else" --> ERR
+    MULTIFLOAT -- "[0-9]" --> FLOAT
+    FLOAT -- "}" --> END
+    FLOAT -- "else" --> ERR
+
+    %% Strings
+    BEGIN -- "double quote" --> STRING
+    STRING -- "not double quote" --> STRING
+    STRING -- "double quote" --> END
+
+    %% Lists
+    BEGIN -- "[" --> LIST
+    LIST -- "]" --> END
+    subgraph List
+        LIST -- "Number, String, or List" --> LISTELE -- "," --> LIST
+    end
+
+    %% Functions
+    BEGIN -- "<" --> FUNNAME
+    FUNNAME -- "Not whitespace or <>/" --> FUNNAME
+    FUNNAME -- ">" --> FUNCALL
+    FUNCALL -- "/" --> FUNDEF
+    FUNCALL -- "else" --> END
+    FUNDEF -- Any code --> FUNDEF
+    FUNDEF -- "/" --> END
+
+    %% Label Definition
+    BEGIN -- "⟨" --> LABEL
+    LABEL -- "[^⟩]" --> LABEL
+    LABEL -- "⟩" --> END
+
+    %% Everything else
+    BEGIN -- "else" --> COMMAND
+    COMMAND -- "ʟ" --> JUMP -- "⟨" --> LABEL
+    JUMP -- "else" --> ERR
