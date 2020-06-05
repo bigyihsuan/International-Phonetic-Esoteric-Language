@@ -1,22 +1,4 @@
 graph LR
-    BEGIN
-    END
-    ERR
-    COMMENT
-    DIGIT
-    MULTIDIGIT
-    MULTIFLOAT
-    FLOAT
-    STRING
-    LIST
-    %% LISTELE
-    FUNNAME
-    FUNCALL
-    FUNDEF
-    LABEL
-    JUMP
-    COMMAND
-
     BEGIN -- "(" --> COMMENT -- ")" --> END
     COMMENT -- "[^)]*" --> COMMENT
     %% any number of non-) characters
@@ -24,18 +6,17 @@ graph LR
     %% Numbers
     BEGIN -- "[0-9]" --> DIGIT
     BEGIN -- "{" --> MULTIDIGIT
-    subgraph Number
-        DIGIT --> END
-        MULTIDIGIT -- "[0-9]+" --> MULTIDIGIT
-        FLOAT -- "[0-9]*" --> FLOAT
-        MULTIDIGIT -- "." --> MULTIFLOAT
-    end
-    MULTIDIGIT -- "}" --> END
+    DIGIT --> NUMBER
+    MULTIDIGIT -- "[0-9]+" --> MULTIDIGIT
+    FLOAT -- "[0-9]*" --> FLOAT
+    MULTIDIGIT -- "." --> MULTIFLOAT
+    MULTIDIGIT -- "}" --> NUMBER
     MULTIDIGIT -- "else" --> ERR
     MULTIFLOAT -- "else" --> ERR
     MULTIFLOAT -- "[0-9]" --> FLOAT
-    FLOAT -- "}" --> END
+    FLOAT -- "}" --> NUMBER
     FLOAT -- "else" --> ERR
+    NUMBER --> END
 
     %% Strings
     BEGIN -- "double quote" --> STRING
@@ -43,19 +24,17 @@ graph LR
     STRING -- "double quote" --> END
 
     %% Lists
-    BEGIN -- "[" --> LIST
-    LIST -- "]" --> END
-    subgraph List
-        LIST -- "Number, String, or List" --> LISTELE -- "," --> LIST
-    end
+    BEGIN -- "[" --> LISTBEGIN
+    BEGIN -- "]" --> LISTEND
+    BEGIN -- "." --> LISTSEP
+    LISTBEGIN & LISTEND & LISTSEP --> END
 
     %% Functions
     BEGIN -- "<" --> FUNNAME
-    FUNNAME -- "Not whitespace or <>/" --> FUNNAME
-    FUNNAME -- ">" --> FUNCALL
-    FUNCALL -- "/" --> FUNDEF
-    FUNCALL -- "else" --> END
-    FUNDEF -- Any code --> FUNDEF
+    FUNNAME -- "Not whitespace" --> FUNNAME
+    FUNNAME -- ">" --> END
+    BEGIN -- "/" --> FUNDEF
+    FUNDEF -- "else" --> FUNDEF
     FUNDEF -- "/" --> END
 
     %% Label Definition
@@ -64,6 +43,4 @@ graph LR
     LABEL -- "⟩" --> END
 
     %% Everything else
-    BEGIN -- "else" --> COMMAND
-    COMMAND -- "ʟ" --> JUMP -- "⟨" --> LABEL
-    JUMP -- "else" --> ERR
+    BEGIN -- "else" --> COMMAND --> END

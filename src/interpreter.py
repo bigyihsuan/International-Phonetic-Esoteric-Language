@@ -4,7 +4,8 @@ import sys
 unvoicedStack = []
 voicedStack = []
 
-labels = {} # Maps a str label to an int index in code
+labels = {} # Maps a  label to a location in code.
+            # Also maps the name of a function to its location.
 tokens = [] # List of tokens.
 
 executionStack = []

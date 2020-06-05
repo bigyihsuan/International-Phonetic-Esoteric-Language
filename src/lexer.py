@@ -44,7 +44,8 @@ class Lex:
         return self.token != token
 
 def getNextToken(source):
-    """ Returns a Lex containing a token and a lexeme. Input is a text stream. """
+    """ Returns a Lex containing a token and a lexeme.
+        Input is a buffered stream. """
     lexstate = LS.BEGIN
     lexeme = ""
     c = ""
@@ -70,11 +71,17 @@ def getNextToken(source):
             elif c == "{":
                 lexstate = LS.INNUMBER
             elif c == "<":
-                lexstate = LS.INFUNCTION
+                lexstate = LS.INFUNCTIONNAME
+            elif c == "/":
+                lexstate = LS.INFUNCTIONCODE
             elif c == "⟨":
                 lexstate = LS.INLABEL
             elif c == "[":
-                lexstate = LS.INLIST
+                return Lex(T.LISTBEGIN, lexeme)
+            elif c == "]":
+                return Lex(T.LISTEND, lexeme)
+            elif c == ".":
+                return Lex(T.LISTSEP, lexeme)
             else:
                 lexstate = LS.INCOMMAND
         elif lexstate == LS.INCOMMENT:
@@ -114,15 +121,23 @@ def getNextToken(source):
                 return Lex(T.NUMBER, lexeme)
             if c not in string.digits:
                 return Lex(T.ERR, "Invalid character in float number '{}'".format(c))
-        elif lexstate == LS.INLIST:
-            # TODO
-            pass
         elif lexstate == LS.INLABEL:
-            # TOOD
-            pass
-        elif lexstate == LS.INFUNCTION:
-            # TODO
-            pass
+            lexeme += c
+            if c == "⟩":
+                lexeme = lexeme[1:-1]
+                return Lex(T.LABEL, lexeme)
+        elif lexstate == LS.INFUNCTIONNAME:
+            if c in string.whitespace:
+                return Lex(T.ERR, "Whitespace not allowed in function name"))
+            lexeme += c
+            if c == ">":
+                lexeme = lexeme[1:-1]
+                return Lex(T.FUNNAME, lexeme)
+        elif lexstate == LS.INFUNCTIONCODE:
+            lexeme += c
+            if c == "\\":
+                lexeme = lexeme[1:-1]
+                return Lex(T.FUNDEF, lexeme)
         elif lexstate == LS.INCOMMAND:
             return Lex(T.COMMAND, lexeme)
         else:

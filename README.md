@@ -201,7 +201,7 @@ Functions must be declared before they are called. If not, the interpreter will 
 
 Functions are declared and called as the following, whitespace omitted:
 ```
-<name>/code/
+<name>/code\
 <name>
 ```
 Function `name`s are strings of any non-whitespace characters that are not `<>/` and start with a non-numeric character.  They are also case sensitive.
