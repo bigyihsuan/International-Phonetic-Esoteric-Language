@@ -142,9 +142,9 @@ ASCII/Unicode order is used for strings. Empty strings are first, followed by sh
 | `ə`       | `(a b -- a==b)` | Equal to                 |
 | `ɘ`       | `(a b -- a<b)`  | Less than                |
 | `ɵ`       | `(a b -- a<=b)` | Less than or equal to    |
-| `ɜ`       | `(a b -- a&&b)` | Logical AND              |
-| `ɞ`       | `(a b -- a||b)` | Logical OR               |
-| `ɐ`       | `(a -- !a)`     | Logical NOT              |
+| `ɜ`       | `(a b -- a and b)` | Logical AND              |
+| `ɞ`       | `(a b -- a or b)` | Logical OR               |
+| `ɐ`       | `(a -- not a)`     | Logical NOT              |
 
 #### Frontal Fricatives, Taps/Flaps, Trills: Mathematics
 Fricatives, taps, flaps, and trills represent mathematical instructions.
