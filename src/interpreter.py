@@ -19,14 +19,3 @@ else:
     # Take code from the given file
     source = open(sys.argv[1], "r")
 
-while True:
-    c = source.read(1)
-    if not c:
-        state = E.State.END
-        break
-    if state == E.State.BEGIN:
-        if c == '\n': # ignore newlines
-            continue
-        if c in '(': # comment
-            state = E.State.COMMENT
-

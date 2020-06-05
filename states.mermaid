@@ -1,16 +1,20 @@
 graph LR
     BEGIN
     END
+    ERR
     COMMENT
     DIGIT
     MULTIDIGIT
+    MULTIFLOAT
     FLOAT
     STRING
     LIST
+    %% LISTELE
     FUNNAME
-    FUNDEF
     FUNCALL
+    FUNDEF
     LABEL
+    JUMP
     COMMAND
 
     BEGIN -- "(" --> COMMENT -- ")" --> END
@@ -18,13 +22,13 @@ graph LR
     %% any number of non-) characters
 
     %% Numbers
-    BEGIN -- "[0-9]" --> DIGIT --> END
+    BEGIN -- "[0-9]" --> DIGIT
     BEGIN -- "{" --> MULTIDIGIT
     subgraph Number
+        DIGIT --> END
         MULTIDIGIT -- "[0-9]+" --> MULTIDIGIT
         FLOAT -- "[0-9]*" --> FLOAT
         MULTIDIGIT -- "." --> MULTIFLOAT
-
     end
     MULTIDIGIT -- "}" --> END
     MULTIDIGIT -- "else" --> ERR
