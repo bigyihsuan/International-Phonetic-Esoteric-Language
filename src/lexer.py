@@ -1,30 +1,3 @@
-"""
-This file defines the classes used for parsing, and later interpreting.
-
-symbol = expression
-{} = 0 or more
-[] = 0 or 1
-() = 1
-"" = terminal string
-| = or
-
-Expr = Code | Comment | FunDecl
-Code = {Code} (FunCall | DoLoop | CountLoop | LabelCreate | LabelJump | INSTRUCTION | LIST | STRING | NUMBER) {Code}
-
-FunDecl = "<" (NONDIG {TEXT}) ">/" Code "/"
-FunCall = "<" (NONDIG {TEXT}) ">"
-Comment = "(" TEXT ")"
-LabelCreate = "❬" TEXT "❭"
-LabelJump = "ʟ❬" TEXT "❭"
-
-INSTRUCTION = check readme for all instructions (conditional skip in here)
-LIST = "[" ["."] { (NUMBER | STRING | LIST) ["."] } "]"
-STRING = '"' TEXT '"'
-NUMBER = DIGIT | "[" (DIGIT{DIGIT}["."]{DIGIT}) "]"
-TEXT = any non-whitespace character
-NONDIG = TEXT without DIGIT
-DIGIT = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
-"""
 from enums import Token as T
 from enums import LexState as LS
 import string
@@ -44,7 +17,7 @@ class Lex:
         return self.token != token
 
     def __repr__(self):
-        return "<Lex: {}, {}>".format(self.token, self.lexeme)
+        return "<Lex: {}, \"{}\">".format(self.token, self.lexeme)
 
 def getNextToken(code):
     """ Input is a string.
@@ -57,11 +30,10 @@ def getNextToken(code):
     sawEscape = False
     strPos = 0
     while True:
-        if strPos < len(code):
-            c = code[strPos]
-        else:
+        if strPos == len(code):
             return ("", Lex(T.END, ""))
-        start = strPos
+        else:
+            c = code[strPos]
 
         if lexstate == LS.BEGIN:
             if c in string.whitespace:
@@ -70,13 +42,15 @@ def getNextToken(code):
                 continue
 
             lexeme = c
+            start = strPos
+            padding = 1 if code[strPos+1] == "\n" else 0
             if c == "(": # comment
-                state = LS.INCOMMENT
+                lexstate = LS.INCOMMENT
             elif c == '"':
                 lexstate = LS.INSTRING
                 sawEscape = False
             elif str.isdigit(c):
-                return (code[start+len(lexeme):], Lex(T.NUMBER, c))
+                return (code[strPos+len(lexeme)+padding:], Lex(T.NUMBER, c))
             elif c == "{":
                 lexstate = LS.INNUMBER
             elif c == "<":
@@ -86,21 +60,22 @@ def getNextToken(code):
             elif c == "⟨":
                 lexstate = LS.INLABEL
             elif c == "[":
-                return (code[start+len(lexeme):], Lex(T.LISTBEGIN, lexeme))
+                return (code[strPos+len(lexeme):], Lex(T.LISTBEGIN, lexeme))
             elif c == "]":
-                return (code[start+len(lexeme):], Lex(T.LISTEND, lexeme))
+                return (code[strPos+len(lexeme):], Lex(T.LISTEND, lexeme))
             elif c == ".":
-                return (code[start+len(lexeme):], Lex(T.LISTSEP, lexeme))
+                return (code[strPos+len(lexeme):], Lex(T.LISTSEP, lexeme))
             else:
                 lexstate = LS.INCOMMAND
 
         elif lexstate == LS.INCOMMENT:
             lexeme += c
             if c == ")":
-                return (code[start+len(lexeme):], Lex(T.COMMENT, lexeme[1:-1]))
+                return (code[start+len(lexeme)+1:], Lex(T.COMMENT, lexeme[1:-1]))
                 break
 
         elif lexstate == LS.INSTRING:
+            print("saw string")
             if sawEscape:
                 sawEscape = False
                 if c in "\n":
@@ -108,18 +83,16 @@ def getNextToken(code):
                 elif c in '\\\'\"abfnrtv':
                     c = "\\{}".format(c)
                 lexeme += c
-                break
             if c == "\\":
                 sawEscape = True
-                break;
             lexeme += c
             if c == '"':
-                return (code[start+len(lexeme):], Lex(T.STRING, lexeme[1:-1]))
+                return (code[start:], Lex(T.STRING, lexeme[1:-1]))
 
         elif lexstate == LS.INNUMBER:
             lexeme += c
             if c == "}":
-                return (code[start+len(lexeme)+2:], Lex(T.NUMBER, lexeme[1:-1]))
+                return (code[start+len(lexeme)+1:], Lex(T.NUMBER, lexeme[1:-1]))
             if c == ".":
                 lexstate = LS.INFLOAT
             elif c not in string.digits:
@@ -128,7 +101,7 @@ def getNextToken(code):
         elif lexstate == LS.INFLOAT:
             lexeme += c
             if c == "}":
-                return (code[start+len(lexeme)+2:], Lex(T.NUMBER, lexeme[1:-1]))
+                return (code[start+len(lexeme)+1:], Lex(T.NUMBER, lexeme[1:-1]))
             if c not in string.digits:
                 return (code[start+len(lexeme):], Lex(T.ERR, "Invalid character in float number '{}'".format(c)))
 

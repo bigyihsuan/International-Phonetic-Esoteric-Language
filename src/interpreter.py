@@ -22,9 +22,10 @@ else:
     # Take code from the given file
     source = open(sys.argv[1], "r")
 
-code = source.read()
+code = source.read() + " "
 
 lastlex = lexer.Lex(T.BEGIN, "")
+lexemes.append(lastlex)
 while lastlex.token != T.END:
     code, lex = lexer.getNextToken(code)
     lexemes.append(lex)
@@ -32,5 +33,6 @@ while lastlex.token != T.END:
     if lastlex.token == T.ERR:
         print("LEXING ERROR:", lastlex.lexeme)
         break
-    print(lexemes)
-    print(code)
+
+for l in lexemes:
+    print(l)
