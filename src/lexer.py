@@ -57,14 +57,16 @@ def getNextToken(code):
     sawEscape = False
     strPos = 0
     while True:
-        c = code[strPos]
+        if strPos < len(code):
+            c = code[strPos]
+        else:
+            return ("", Lex(T.END, ""))
         start = strPos
-        # check for EOF
-        if c == "":
-            return (code[start+len(lexeme):], Lex(T.END, ""))
 
         if lexstate == LS.BEGIN:
             if c in string.whitespace:
+                code = code[1:]
+                strPos = 0
                 continue
 
             lexeme = c
@@ -126,7 +128,7 @@ def getNextToken(code):
         elif lexstate == LS.INFLOAT:
             lexeme += c
             if c == "}":
-                return (code[start+len(lexeme):], Lex(T.NUMBER, lexeme[1:-1]))
+                return (code[start+len(lexeme)+2:], Lex(T.NUMBER, lexeme[1:-1]))
             if c not in string.digits:
                 return (code[start+len(lexeme):], Lex(T.ERR, "Invalid character in float number '{}'".format(c)))
 
@@ -153,4 +155,3 @@ def getNextToken(code):
         else:
             return (code[start+len(lexeme):], Lex(T.ERR, "Unknown lexer state {}".format(lexstate)))
         strPos += 1
-        print("DEBUG", lexeme)

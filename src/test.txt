@@ -1,6 +1,0 @@
-1{12345}
-{12.34}
-{0.333}
-{.fail} (should error)
-{0.a} (should error)
-{0.0} (valid)

@@ -24,9 +24,13 @@ else:
 
 code = source.read()
 
-lasttok = T.BEGIN
-while lasttok != T.END:
+lastlex = lexer.Lex(T.BEGIN, "")
+while lastlex.token != T.END:
     code, lex = lexer.getNextToken(code)
     lexemes.append(lex)
+    lastlex = lex
+    if lastlex.token == T.ERR:
+        print("LEXING ERROR:", lastlex.lexeme)
+        break
     print(lexemes)
     print(code)
