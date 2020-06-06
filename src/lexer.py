@@ -43,31 +43,38 @@ class Lex:
     def __ne__(self, token):
         return self.token != token
 
-def getNextToken(source):
-    """ Returns a Lex containing a token and a lexeme.
-        Input is a buffered stream. """
+    def __repr__(self):
+        return "<Lex: {}, {}>".format(self.token, self.lexeme)
+
+def getNextToken(code):
+    """ Input is a string.
+        Output is a tuple containing:
+            The input string, with the lexed substring removed, and
+            a Lex containing a token and its associated lexeme """
     lexstate = LS.BEGIN
     lexeme = ""
     c = ""
     sawEscape = False
+    strPos = 0
     while True:
-        c = source.read(1)
+        c = code[strPos]
+        start = strPos
         # check for EOF
-        if not c:
-            return Lex(T.END, "")
+        if c == "":
+            return (code[start+len(lexeme):], Lex(T.END, ""))
 
         if lexstate == LS.BEGIN:
-            if c in string.whitespace: # ignore whitespace for now
+            if c in string.whitespace:
                 continue
-            if c in '(': # comment
-                state = LS.INCOMMENT
-            lexeme = c
 
-            if c == '"':
+            lexeme = c
+            if c == "(": # comment
+                state = LS.INCOMMENT
+            elif c == '"':
                 lexstate = LS.INSTRING
                 sawEscape = False
             elif str.isdigit(c):
-                return Lex(T.DIGIT, c)
+                return (code[start+len(lexeme):], Lex(T.NUMBER, c))
             elif c == "{":
                 lexstate = LS.INNUMBER
             elif c == "<":
@@ -77,17 +84,20 @@ def getNextToken(source):
             elif c == "⟨":
                 lexstate = LS.INLABEL
             elif c == "[":
-                return Lex(T.LISTBEGIN, lexeme)
+                return (code[start+len(lexeme):], Lex(T.LISTBEGIN, lexeme))
             elif c == "]":
-                return Lex(T.LISTEND, lexeme)
+                return (code[start+len(lexeme):], Lex(T.LISTEND, lexeme))
             elif c == ".":
-                return Lex(T.LISTSEP, lexeme)
+                return (code[start+len(lexeme):], Lex(T.LISTSEP, lexeme))
             else:
                 lexstate = LS.INCOMMAND
+
         elif lexstate == LS.INCOMMENT:
+            lexeme += c
             if c == ")":
-                lexstate = LS.BEGIN
-            break
+                return (code[start+len(lexeme):], Lex(T.COMMENT, lexeme[1:-1]))
+                break
+
         elif lexstate == LS.INSTRING:
             if sawEscape:
                 sawEscape = False
@@ -100,45 +110,47 @@ def getNextToken(source):
             if c == "\\":
                 sawEscape = True
                 break;
-
             lexeme += c
             if c == '"':
-                lexeme = lexeme[1:-1]
-                return Lex(T.STRING, lexeme)
+                return (code[start+len(lexeme):], Lex(T.STRING, lexeme[1:-1]))
+
         elif lexstate == LS.INNUMBER:
             lexeme += c
             if c == "}":
-                lexeme = lexeme[1:-1]
-                return Lex(T.NUMBER, lexeme)
+                return (code[start+len(lexeme)+2:], Lex(T.NUMBER, lexeme[1:-1]))
             if c == ".":
                 lexstate = LS.INFLOAT
             elif c not in string.digits:
-                return Lex(T.ERR, "Invalid character in multidigit number '{}'".format(c))
+                return (code[start+len(lexeme):], Lex(T.ERR, "Invalid character in multidigit number '{}'".format(c)))
+
         elif lexstate == LS.INFLOAT:
             lexeme += c
             if c == "}":
-                lexeme = lexeme[1:-1]
-                return Lex(T.NUMBER, lexeme)
+                return (code[start+len(lexeme):], Lex(T.NUMBER, lexeme[1:-1]))
             if c not in string.digits:
-                return Lex(T.ERR, "Invalid character in float number '{}'".format(c))
+                return (code[start+len(lexeme):], Lex(T.ERR, "Invalid character in float number '{}'".format(c)))
+
         elif lexstate == LS.INLABEL:
             lexeme += c
             if c == "⟩":
-                lexeme = lexeme[1:-1]
-                return Lex(T.LABEL, lexeme)
+                return (code[start+len(lexeme):], Lex(T.LABEL, lexeme[1:-1]))
+
         elif lexstate == LS.INFUNCTIONNAME:
             if c in string.whitespace:
-                return Lex(T.ERR, "Whitespace not allowed in function name"))
+                return (code[start+len(lexeme):], Lex(T.ERR, "Whitespace not allowed in function name"))
             lexeme += c
             if c == ">":
-                lexeme = lexeme[1:-1]
-                return Lex(T.FUNNAME, lexeme)
+                return (code[start+len(lexeme):], Lex(T.FUNNAME, lexeme[1:-1]))
+
         elif lexstate == LS.INFUNCTIONCODE:
             lexeme += c
             if c == "\\":
-                lexeme = lexeme[1:-1]
-                return Lex(T.FUNDEF, lexeme)
+                return (code[start+len(lexeme):], Lex(T.FUNDEF, lexeme[1:-1]))
+
         elif lexstate == LS.INCOMMAND:
-            return Lex(T.COMMAND, lexeme)
+            return (code[start+len(lexeme):], Lex(T.COMMAND, lexeme))
+
         else:
-            return Lex(T.ERR, "Unknown lexer state {}".format(lexstate))
+            return (code[start+len(lexeme):], Lex(T.ERR, "Unknown lexer state {}".format(lexstate)))
+        strPos += 1
+        print("DEBUG", lexeme)

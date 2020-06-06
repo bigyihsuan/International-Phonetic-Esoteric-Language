@@ -1,15 +1,17 @@
 import enums as E
+from enums import Token as T
 import sys
+import io
+import lexer
 
 unvoicedStack = []
 voicedStack = []
 
 labels = {} # Maps a  label to a location in code.
             # Also maps the name of a function to its location.
-tokens = [] # List of tokens.
+lexemes = [] # List of lexemes.
 
 executionStack = []
-state = E.State.BEGIN
 
 stderr = sys.stderr
 
@@ -20,3 +22,11 @@ else:
     # Take code from the given file
     source = open(sys.argv[1], "r")
 
+code = source.read()
+
+lasttok = T.BEGIN
+while lasttok != T.END:
+    code, lex = lexer.getNextToken(code)
+    lexemes.append(lex)
+    print(lexemes)
+    print(code)

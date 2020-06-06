@@ -1,2 +1,6 @@
-this is a test of
-w h i t e s p a c e
+1{12345}
+{12.34}
+{0.333}
+{.fail} (should error)
+{0.a} (should error)
+{0.0} (valid)
