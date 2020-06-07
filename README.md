@@ -58,7 +58,7 @@ Lists are data structures in IPEL that can hold any number of elements of any ty
 
 Lists are created by surrounding its elements with square brackets `[elements]`. List elements are separated using periods `.`: `[a.b.c]`.
 
-Nested lists are denoted by a list within a list: `[[nest].ele.[nest]]`. Periods preceding the first element and following the last element are optional.
+Nested lists are denoted by a list within a list: `[[nest].ele.[nest]]`. Periods following the last element are optional.
 
 Non-empty lists are considered truthy.
 
@@ -197,18 +197,18 @@ I/O is handled by a set of close-to-mid front and back vowels. Front vowels hand
 
 Functions are not actually true "functions", per se, since they do not take input, and are more like procedures since they act directly on the stack. They are most analogous to Forth definitions in declaration and use.
 
-Functions must be declared before they are called. If not, the interpreter will ignore it.
+Functions must be declared before they are called. If not, the interpreter will ignore the call.
 
 Functions are declared and called as the following, whitespace omitted:
 ```
 <name>/code\
 <name>
 ```
-Function `name`s are strings of any non-whitespace characters that are not `<>/` and start with a non-numeric character.  They are also case sensitive.
+Function `name`s are strings of any non-whitespace characters that are not `>`.  They are also case sensitive.
 
-Functions can be overwritten by declaring them again with `<name>/new code/`.
+Functions can be overwritten by declaring them again with `<name>/new code\`.
 
-Functions cannot be declared in a function, but they can be called in a function declaration for recursion, like `<name>/some code <name> more code/`.
+Functions can be declared in functions, however any functions within
 
 ## Control Structures
 

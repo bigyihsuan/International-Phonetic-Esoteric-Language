@@ -44,7 +44,7 @@ def getNextToken(code):
             lexeme = c
             start = strPos
             padding = 1 if code[strPos+1] == "\n" else 0
-            if c == "(": # comment
+            if c == "(":
                 lexstate = LS.INCOMMENT
             elif c == '"':
                 lexstate = LS.INSTRING
@@ -56,7 +56,9 @@ def getNextToken(code):
             elif c == "<":
                 lexstate = LS.INFUNCTIONNAME
             elif c == "/":
-                lexstate = LS.INFUNCTIONCODE
+                return (code[strPos+len(lexeme)+padding:], Lex(T.FUNDEFSTART, c))
+            elif c == "\\":
+                return (code[strPos+len(lexeme)+padding:], Lex(T.FUNDEFEND, c))
             elif c == "⟨":
                 lexstate = LS.INLABEL
             elif c == "[":
@@ -66,7 +68,7 @@ def getNextToken(code):
             elif c == ".":
                 return (code[strPos+len(lexeme):], Lex(T.LISTSEP, lexeme))
             else:
-                lexstate = LS.INCOMMAND
+                lexstate = LS.ININSTRUCTION
 
         elif lexstate == LS.INCOMMENT:
             lexeme += c
@@ -75,7 +77,6 @@ def getNextToken(code):
                 break
 
         elif lexstate == LS.INSTRING:
-            print("saw string")
             if sawEscape:
                 sawEscape = False
                 if c in "\n":
@@ -87,7 +88,7 @@ def getNextToken(code):
                 sawEscape = True
             lexeme += c
             if c == '"':
-                return (code[start:], Lex(T.STRING, lexeme[1:-1]))
+                return (code[start+len(lexeme):], Lex(T.STRING, lexeme[1:-1]))
 
         elif lexstate == LS.INNUMBER:
             lexeme += c
@@ -117,13 +118,8 @@ def getNextToken(code):
             if c == ">":
                 return (code[start+len(lexeme):], Lex(T.FUNNAME, lexeme[1:-1]))
 
-        elif lexstate == LS.INFUNCTIONCODE:
-            lexeme += c
-            if c == "\\":
-                return (code[start+len(lexeme):], Lex(T.FUNDEF, lexeme[1:-1]))
-
-        elif lexstate == LS.INCOMMAND:
-            return (code[start+len(lexeme):], Lex(T.COMMAND, lexeme))
+        elif lexstate == LS.ININSTRUCTION:
+            return (code[start+len(lexeme):], Lex(T.INSTRUCTION, lexeme))
 
         else:
             return (code[start+len(lexeme):], Lex(T.ERR, "Unknown lexer state {}".format(lexstate)))
