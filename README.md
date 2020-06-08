@@ -1,13 +1,27 @@
 # International Phonetic Esoteric Language
-WIP
 
-Also known as IPEL. An esoteric, stack-based programming language based around IPA symbols. 100% not associated with the IPA.
+## What is this?
 
-## Running
-TODO
+The International Phonetic Esoteric Language (IPEL) is a personal project of mine to create a simple, stack-based esoteric programming language from scratch to challenge myself. I also decided to base its instruction set on the International Phonetic Alphabet by the International Phonetic Association, modeling the appearance of a typical phonetic transcription, such as `/hε.lɔ.wɔɹld/` for a rough approximation of "hello world".
+
+It is meant for code golf, and is definitely not made for any sort of serious use.
+
+## Installation
+
+Install this by cloning this repository (`https://github.com/bigyihsuan/International-Phonetic-Esoteric-Language`).
+
+## Execution
+
+Execute the IPEL code by navigating to the repository folder and running `interpreter.py` with Python 3.
+
+```
+$ python3 interpreter.py codeFile
+```
+
+`codeFile` is any file that contains IPEL code.
 
 ## Basic Information
-IPEL uses three stacks: two value stacks, and an execution stack. The value stacks are read-writable. The execution stack is used internally to handle execution of code; it is read-only.
+IPEL uses three stacks: two value stacks, and an execution stack. The value stacks are read-writable. The execution stack is used internally to handle function execution; it is read-only.
 
 Code is run by pushing values into the value stack and instructions into the instruction stack. See below for the types of IPEL.
 
@@ -17,13 +31,13 @@ The value stack holds the two types above and nothing else: numbers and strings.
 There are two value stacks: the `Unvoiced` stack (U stack) and the `Voiced` stack (V stack). By default, values are pushed onto the U stack.
 
 ### Voice Switching
-To change the stack that values are pushed onto, `U` and `V` are used as voicing flags, changing the voicing to `Unvoiced` and `Voiced` respectively. This continues until the interpreter encounters another voicing flag, or the end of the program.
+To change the stack that values are pushed onto, `ɸ` and `β` are used as voicing flags, changing the voicing to `Unvoiced` and `Voiced` respectively. This continues until the interpreter encounters another voicing flag, or the end of the program.
 
 ## The Execution Stack
-The execution stack (E stack) stores the location in the code to return to after executing a function. When a function is called, the location of the instruction following it is pushed into the E stack. When the function returns, the interpreter pops the E stack and jumps back to the location popped.
+The execution stack stores the location in the code to return to after executing a function. When a function is called, the location of the instruction following it is pushed into the E stack. When the function returns, the interpreter pops the E stack and jumps back to the location popped.
 
 ## Comments
-Comments are non-whitespace characters surrounded by parentheses `(like this)`.
+Comments are characters surrounded by parentheses `(like this)`.
 
 Comments end when a closing parenthesis `)` appears.
 
@@ -34,15 +48,24 @@ Comments end when a closing parenthesis `)` appears.
     (a newline and tab)
 ```
 
+A helpful comment is the stack effect diagram, which notes the stack before and after an operation.
+
+```
+(before -- after)
+(bottom top -- bottom top)
+```
+
+The top of the stack is to the right.
+
 ## Types
 There are 3 types in IPEL: Numbers, Strings, and Lists.
 
 ### Numbers
-A number is any real number. Numbers also represent boolean values: 0 and negative values are falsy, and positive values are truthy.
+A number is any real number. Numbers also represent boolean values: 0 is falsy, and non-0 values are truthy.
 
 Integers can be pushed in as a single decimal digit from `0-9`, or any number of decimal digits within square brackets `{12345}`.
 
-Floats can be pushed in using the multidigit notation: `{123.456}`. A number in the form `{d.}` where `d` is a digit is invalid.
+Floats can be pushed in using the multidigit notation: `{123.456}`. A number in the form `{d.}` where `d` is a digit is invalid. This is the same with the form `{.d}`.
 
 ```
 7 ( -- 7)
@@ -60,19 +83,19 @@ Lists are created by surrounding its elements with square brackets `[elements]`.
 
 Nested lists are denoted by a list within a list: `[[nest].ele.[nest]]`. Periods following the last element are optional.
 
-Non-empty lists are considered truthy.
+Empty lists are falsy, and are otherwise truthy.
 
 ```
 [] (empty list)
 [1.2.3]
-[{1.2}."string".3] (note that internally "string" is a list)
+[{1.2}."string".3]
 [["nested"].["list".["in list"]]."it is"]
 ```
 
 ### Strings
-Strings are lists of integers with length 0 or greater. These are delimited by `"`.
+Strings are sequences of characters. These are delimited by `"`.
 
-Non-empty strings, like lists, are considered truthy.
+Like lists, empty strings are falsy and are otherwise truthy.
 
 All instructions that work on lists also work on strings.
 
@@ -126,7 +149,7 @@ Plosives modify the stack.
 | `d`         | `(a b -- b a)`         | Swap the first and second elements of the stack.             |
 | `ʈ`         | `(c b a -- a c b)`     | Rotate the top 3 elements clockwise (upwards).               |
 | `ɖ`         | `(c b a -- b a c)`     | Rotate the top 3 elements counterclockwise (downwards).      |
-| `c`         | `(d b a c -- d c b a)` | Sort the stack. Numbers go before strings. Lower values on top. |
+| `c`         | `(d b a c -- d c b a)` | Sort the stack. Numbers before Strings before Lists. Order of lists in the stack is preserved. Lower values on top. |
 | `k`         | `A(a -- ) B( -- a)`    | Pop the top of the current stack and push it onto the other one. |
 | `g`         | `A( -- a) B(a -- )`    | Pop the top of the other stack and push it onto the current one. |
 
@@ -135,6 +158,8 @@ Approximates and laterals represent comparisons. For all instructions, `1` is pu
 
 ASCII/Unicode order is used for strings. Empty strings are first, followed by shorter stings.
 
+Comparing lists does not work except for the `ə` "Equal to" operator, where it will check for equality. The interpreter will NOP the instruction if it isn't the case
+
 | Character | Stack Effect    | Comment                  |
 | --------- | --------------- | ------------------------ |
 | `ɨ`       | `(a b -- a>b)`  | Greater than             |
@@ -142,12 +167,14 @@ ASCII/Unicode order is used for strings. Empty strings are first, followed by sh
 | `ə`       | `(a b -- a==b)` | Equal to                 |
 | `ɘ`       | `(a b -- a<b)`  | Less than                |
 | `ɵ`       | `(a b -- a<=b)` | Less than or equal to    |
-| `ɜ`       | `(a b -- a&&b)` | Logical AND              |
-| `ɞ`       | `(a b -- a\|\|b)` | Logical OR               |
-| `ɐ`       | `(a -- !a)`     | Logical NOT              |
+| `ɜ`       | `(a b -- a and b)` | Logical AND              |
+| `ɞ`       | `(a b -- a or b)` | Logical OR               |
+| `ɐ`       | `(a -- not a)`     | Logical NOT              |
 
 #### Frontal Fricatives, Taps/Flaps, Trills: Mathematics
 Fricatives, taps, flaps, and trills represent mathematical instructions.
+
+These only apply to numbers. Otherwise, the interpreter will NOP the instruction.
 
 | Character | Stack Effect         | Comment                                                      |
 | --------- | -------------------- | ------------------------------------------------------------ |
@@ -165,6 +192,7 @@ Fricatives, taps, flaps, and trills represent mathematical instructions.
 | `r`       | `(a -- !a)`          | Bitwise NOT                                                  |
 | `ɾ`       | `(a -- -a)`          | Inverts the sign of `a`.                                     |
 | `ɽ`       | `(a -- ceil(a))`     | Rounds `a` to the largest integer                            |
+| `ʙ`       | `(a -- floor(a))`     | Rounds `a` to the smallest integer                            |
 | `ɬ`       | `(a b -- max)`       | Minimum                                                      |
 | `ɮ`       | `(a b -- min)`       | Maximum                                                      |
 
@@ -173,13 +201,14 @@ Back fricatives, taps, flaps, and trills represent operations on lists. String o
 
 | Character | Stack Effect          | Comment                                                      |
 | --------- | --------------------- | ------------------------------------------------------------ |
-| `x`       | `(abc def -- abcdef)` | Concatenation.                                               |
-| `ɣ`       | `(a ... z n -- list)` | Concatenates the next `n` elements popped off the stack into a list of length `n`. |
-| `ħ`       | `(a -- a n)`          | List length. Pushes the length of the element popped.        |
-| `ʀ`       | `(list -- a b ...)`   | Splits a list into its individual elements.                  |
-| `h`       | `(list n -- list e)`  | Returns the element `e` at `n`, 0-indexed.                   |
-| `χ`       | `(num -- str)`        | Converts a number to a single-character string, based on its ASCII/Unicode value. |
-| `ʁ`       | `(str -- s t r)`      | Converts a string to its ASCII/Unicode value.                |
+| `x`       | `(abc def -- abcdef)` | Concatenation. Implicitly casts its arguments into strings, then lists if they are not lists. |
+| `ɣ`       | `(a ... z n -- list)` | Concatenates the next `n` elements popped off the stack into a list of length `n`. Will NOP if `n` is not a number and does `ceil(n)` if it is. |
+| `ħ`       | `(a -- a n)`          | List length. Pushes the length of the element peeked. Casts `a` to a list to get its length. `a`'s type is retained. |
+| `ʀ`       | `(list -- a b ...)`   | Splits a list into its individual elements. Implicitly casts `list` to a list. |
+| `h`       | `(list n -- list e)`  | Returns the element `e` at `n`, 0-indexed. Will NOP if `n` is not a number and does `ceil(n)` if it is |
+| `χ`       | `(num -- str)`        | Converts a number to a single-character string, based on its ASCII/Unicode value. Will NOP if `num` is not a number, and `ceil(num)` if it is. |
+| `ʁ`       | `(str -- s t r)`      | Converts a string to a list of integers representing their `ord()` values. Will NOP if `str` is not a list of single-character strings or a string. |
+| `ʕ`       | `(list -- str)`      | Converts a list to a string. |
 
 #### Vowels: I/O
 
@@ -187,11 +216,12 @@ I/O is handled by a set of close-to-mid front and back vowels. Front vowels hand
 
 | Character | Stack Effect        | Comment                                                      |
 | --------- | ------------------- | ------------------------------------------------------------ |
-| `i`       | `( -- str)`         | Pushes a line from STDIN.                                    |
-| `y`       | `( -- str str str)` | Pushes a line from STDIN, separating by whitespace.          |
-| `ɪ`       | `( -- int)`         | Pushes an integer from STDIN. Silently `nop`s when it cannot find an integer. |
-| `ʏ`       | `( -- float)`       | Pushes a float from STDIN. Silently `nop`s when it cannot find a float. |
-| `o`       | `(ele trail -- )`   | Pops and outputs to STDIN with the trailing element `trail`. |
+| `i`       | `( -- str)`         | Pushes a line from STDIN as a single string. |
+| `y`       | `( -- str str str)` | Pushes a line from STDIN as multiple strings, separated by whitespace.          |
+| `ɪ`       | `( -- int)`         | Pushes an integer from STDIN. Will NOP when it cannot find an integer. |
+| `ʏ`       | `( -- float)`       | Pushes a float from STDIN. Will NOP when it cannot find a float. |
+| `o`       | `(ele -- )`         | Pops and outputs to STDIN. Does not cast. |
+| `ɤ`       | `(ele -- )`         | Pops and outputs to STDIN. Will cast lists to strings. |
 
 ## Functions
 
@@ -218,8 +248,8 @@ Control structures in IPEL change where the instruction pointer goes next.
 | Character  | Stack Effect | Comment                                                      |
 | ---------- | ------------ | ------------------------------------------------------------ |
 | `ʌ`        | `(con -- )`  | Conditional Skip: If `con` is truthy, skip the next instruction. |
-| `❬label❭` | `( -- )`     | Label: Signifies a label at the location of `❬label❭` with the name `str`. |
-| `ʟ❬label❭` | `( -- )`     | Go-To Label: Jumps execution to the instruction after `ʎ❬label❭`. |
+| `⟨label⟩` | `( -- )`     | Label: Signifies a label at the location of `❬label❭` with the name `str`. |
+| `ʟ⟨label⟩` | `( -- )`     | Go-To Label: Jumps execution to the instruction after `⟨label⟩`. |
 
 ### Conditional Skip
 

@@ -4,15 +4,12 @@ import sys
 import io
 import lexer
 from parser import Parser as P
-
-unvoicedStack = []
-voicedStack = []
+from evaluator import evaluate
+import os
 
 labels = {} # Maps a  label to a location in code.
             # Also maps the name of a function to its definition location.
 lexemes = [] # List of lexemes.
-
-executionStack = []
 
 stderr = sys.stderr
 
@@ -35,8 +32,9 @@ while lastlex.token != T.END:
     lastlex = lex
     if lastlex.token == T.ERR:
         print("LEXING ERROR:", lastlex.lexeme)
-        break
+        os.abort()
 
 parser.mapLabels(lexemes, labels)
-print(labels)
-parser.validateLexemes(lexemes, labels)
+if not parser.validateLexemes(lexemes, labels):
+    os.abort()
+evaluate(lexemes, labels)

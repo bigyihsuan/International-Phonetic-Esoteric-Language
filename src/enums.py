@@ -20,7 +20,7 @@ class Token(Flag):
 
 class LexState(Flag):
     """
-    Represents the interpreter state.
+    Represents the lexer state.
     """
     BEGIN = auto()
     INNUMBER = auto()
@@ -32,3 +32,10 @@ class LexState(Flag):
     INFUNCTIONCODE = auto()
     INLABEL = auto()
     ININSTRUCTION = auto()
+
+class EvalState(Flag):
+    """
+    Represents the interpreter state.
+    """
+    DEFAULT = auto()
+    CALLING = auto()

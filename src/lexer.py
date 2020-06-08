@@ -34,16 +34,15 @@ def getNextToken(code):
             return ("", Lex(T.END, ""))
         else:
             c = code[strPos]
-
         if lexstate == LS.BEGIN:
             if c in string.whitespace:
                 code = code[1:]
                 strPos = 0
                 continue
-
             lexeme = c
             start = strPos
             padding = 1 if code[strPos+1] == "\n" else 0
+
             if c == "(":
                 lexstate = LS.INCOMMENT
             elif c == '"':
@@ -71,10 +70,10 @@ def getNextToken(code):
                 lexstate = LS.ININSTRUCTION
 
         elif lexstate == LS.INCOMMENT:
-            lexeme += c
             if c == ")":
-                return (code[start+len(lexeme)+1:], Lex(T.COMMENT, lexeme[1:-1]))
-                break
+                lexeme = ""
+                code = code[1:]
+                lexstate = LS.BEGIN
 
         elif lexstate == LS.INSTRING:
             if sawEscape:
@@ -88,12 +87,12 @@ def getNextToken(code):
                 sawEscape = True
             lexeme += c
             if c == '"':
-                return (code[start+len(lexeme):], Lex(T.STRING, lexeme[1:-1]))
+                return (code[start+len(lexeme):], Lex(T.STRING, lexeme))
 
         elif lexstate == LS.INNUMBER:
             lexeme += c
             if c == "}":
-                return (code[start+len(lexeme)+1:], Lex(T.NUMBER, lexeme[1:-1]))
+                return (code[start+len(lexeme):], Lex(T.NUMBER, lexeme[1:-1]))
             if c == ".":
                 lexstate = LS.INFLOAT
             elif c not in string.digits:
@@ -102,7 +101,7 @@ def getNextToken(code):
         elif lexstate == LS.INFLOAT:
             lexeme += c
             if c == "}":
-                return (code[start+len(lexeme)+1:], Lex(T.NUMBER, lexeme[1:-1]))
+                return (code[start+len(lexeme):], Lex(T.NUMBER, lexeme[1:-1]))
             if c not in string.digits:
                 return (code[start+len(lexeme):], Lex(T.ERR, "Invalid character in float number '{}'".format(c)))
 
