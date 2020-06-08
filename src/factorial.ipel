@@ -1,0 +1,47 @@
+<factorialCommented> (n -- n!)
+/
+
+b1əɐʌʟ⟨end⟩ (go to end if n==1. skip jump if n!=1)
+
+⟨loop⟩ (while top != 1, duplicate and decrement)
+(check if top == 1 to go to multiplication)
+
+b (dup n)
+(-- n n)
+
+1z (decrement top)
+(-- n n-1)
+
+b (dup)
+(-- n n-1 n-1)
+
+1
+(-- n n-1 a=n-1 b=1)
+
+ə (a==b?)
+(-- n n-1 a==b?)
+
+ʌ (skip next if a==b)
+(-- n n-1)
+ʟ⟨loop⟩ (jump to loop start if a!=b)
+
+⟨mult⟩ (begin loop for multiplication)
+(-- n n-1 n-2 ... 2 1)
+
+f (multiply)
+(-- n n-1 n-2 ... 3 2)
+
+t (push stack size)
+(-- n n-1 n-2 ... 3 2 size)
+
+1ə (check if stack size == 1)
+(-- n n-1 n-2 ... 3 2 size==1?)
+
+ʌ (skip next if size==1)
+ʟ⟨mult⟩ (loop if not)
+⟨end⟩
+\
+
+<factorial>/b1əɐʌʟ⟨end⟩⟨loop⟩b1zb1əʌʟ⟨loop⟩⟨mult⟩ft1əʌʟ⟨mult⟩⟨end⟩\
+
+ɪ<factorial>o

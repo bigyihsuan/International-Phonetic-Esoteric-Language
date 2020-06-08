@@ -34,6 +34,7 @@ def getNextToken(code):
             return ("", Lex(T.END, ""))
         else:
             c = code[strPos]
+
         if lexstate == LS.BEGIN:
             if c in string.whitespace:
                 code = code[1:]
@@ -70,10 +71,9 @@ def getNextToken(code):
                 lexstate = LS.ININSTRUCTION
 
         elif lexstate == LS.INCOMMENT:
+            lexeme += c
             if c == ")":
-                lexeme = ""
-                code = code[1:]
-                lexstate = LS.BEGIN
+                return (code[start+len(lexeme):], Lex(T.COMMENT, lexeme))
 
         elif lexstate == LS.INSTRING:
             if sawEscape:

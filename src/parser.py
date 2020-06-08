@@ -20,8 +20,8 @@ class Parser:
                 if lex[i].token == T.LABEL and lex[i].lexeme not in lab:
                     if i > 0 and lex[i-1].lexeme != "ʟ":
                         lab[lex[i].lexeme] = i
-                elif lex[i].token == T.FUNNAME and lex[i+1].token == T.FUNDEFSTART:
-                    lab[lex[i].lexeme] = i
+                elif i+1 < len(lex) and lex[i].token == T.FUNNAME and lex[i+1].token == T.FUNDEFSTART:
+                    lab[lex[i].lexeme] = i+1
 
     def validateLexemes(self, lex, lab):
         """
@@ -49,7 +49,7 @@ class Parser:
                 if lex[i].token == T.INSTRUCTION and lex[i].lexeme == "ʟ":
                     if (lex[i+1].token != T.LABEL):
                         errors.append("Missing label after JUMP at Lex {}".format(i))
-                if lex[i].token == T.FUNNAME and lex[i+1].token != T.FUNDEFSTART:
+                if i+1 < len(lex) and lex[i].token == T.FUNNAME and lex[i+1].token != T.FUNDEFSTART:
                     if lex[i].lexeme not in lab:
                         errors.append("Function call {} at {} not defined".format(lex[i].lexeme, i))
         if funs != 0:

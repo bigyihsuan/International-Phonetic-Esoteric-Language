@@ -15,10 +15,14 @@ Install this by cloning this repository (`https://github.com/bigyihsuan/Internat
 Execute the IPEL code by navigating to the repository folder and running `interpreter.py` with Python 3.
 
 ```
-$ python3 interpreter.py codeFile
+$ python3 interpreter.py [options] codeFile
 ```
 
 `codeFile` is any file that contains IPEL code.
+
+`[options]` is one of the following:
+
+* `-d`: Runs the interpreter in debug mode. The interpreter will print the label mappings and the parsed lexemes. It will also print the data and execution stacks after every instruction.
 
 ## Basic Information
 IPEL uses three stacks: two value stacks, and an execution stack. The value stacks are read-writable. The execution stack is used internally to handle function execution; it is read-only.

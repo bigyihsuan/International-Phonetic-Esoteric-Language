@@ -1,12 +1,14 @@
 import math
 
 def executeInstruction(instruction, unvoiced, voiced, currentStack):
+
     """
     This file defines the majority of 1-character instructions in IPEL.
     Input is an instruction, the 2 stacks, and the current stack.
     This will look at the instruction and apply it to the current stack.
     The voiced/unvoiced stacks are for the stack-switching instructions.
     """
+
     otherStack = voiced if currentStack == unvoiced else unvoiced
 # Voicings
     if instruction == "ɸ":
