@@ -47,11 +47,12 @@ class Parser:
                 if lex[i].token == T.LISTEND:
                     lists -= 1
                 if lex[i].token == T.INSTRUCTION and lex[i].lexeme == "ʟ":
-                    if (lex[i+1].token != T.LABEL):
+                    if i+1 < len(lex) and lex[i+1].token != T.LABEL:
                         errors.append("Missing label after JUMP at Lex {}".format(i))
-                if i+1 < len(lex) and lex[i].token == T.FUNNAME and lex[i+1].token != T.FUNDEFSTART:
-                    if lex[i].lexeme not in lab:
-                        errors.append("Function call {} at {} not defined".format(lex[i].lexeme, i))
+                if i+1 < len(lex):
+                    if lex[i].token == T.FUNNAME and lex[i+1].token != T.FUNDEFSTART:
+                        if lex[i].lexeme not in lab:
+                            errors.append("Function call {} at {} not defined".format(lex[i].lexeme, i))
         if funs != 0:
             errors.append("Missmatched function bodies exist")
         if lists != 0:

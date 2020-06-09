@@ -21,7 +21,7 @@ def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack):
         print("Execution:", executionStack)
         print()
 
-    isInFunction = False
+    executionDepth = 0
     ep = 0
     while ep < len(lex):
         if debugmode:
@@ -59,12 +59,12 @@ def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack):
             if lex[ep].token == T.FUNNAME and lex[ep+1].token != T.FUNDEFSTART:
                 executionStack.append(ep)
                 ep = lab[lex[ep].lexeme]
-                isInFunction = True
+                executionDepth += 1
             if lex[ep].token == T.FUNNAME and lex[ep+1].token == T.FUNDEFSTART:
                 while lex[ep].token != T.FUNDEFEND:
                     ep += 1
-        if isInFunction and lex[ep].token == T.FUNDEFEND:
-            isInFunction = False
+        if executionDepth > 0 and lex[ep].token == T.FUNDEFEND:
+            executionDepth -= 1
             ep = executionStack.pop()
 
         if debugmode:

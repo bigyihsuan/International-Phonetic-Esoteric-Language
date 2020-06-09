@@ -182,9 +182,9 @@ These only apply to numbers. Otherwise, the interpreter will NOP the instruction
 
 | Character | Stack Effect         | Comment                                                      |
 | --------- | -------------------- | ------------------------------------------------------------ |
-| `s`       | `(a b -- a+b)`       | Addition                                                     |
-| `z`       | `(a b -- a-b)`       | Subtraction                                                  |
-| `f`       | `(a b -- a*b)`       | Multiplication                                               |
+| `s`       | `(a b -- a+b)`       | Addition |
+| `z`       | `(a b -- a-b)`       | Subtraction |
+| `f`       | `(a b -- a*b)`       | Multiplication  |
 | `v`       | `(a b -- a/b)`       | Division; will return 0 if `b == 0`. If `a` and `b` are integers, will perform `a // b`. |
 | `ⱱ`       | `(a b -- a%b)`       | Modulo (Labiodental Tap ⱱ)                                   |
 | `ʃ`       | `(a b -- a**b)`      | Exponent; Base `a`, exponent `b`                             |

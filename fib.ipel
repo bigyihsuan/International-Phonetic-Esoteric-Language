@@ -1,0 +1,23 @@
+<fibCommented> (n1 -- n2)
+(generates the n1-th fibonacci number)
+/
+(check for 1)
+b1ɨʌʟ⟨end⟩
+
+(else)
+(do fib)
+1z
+b
+1z
+<fib>
+d
+<fib>
+s
+⟨end⟩
+(  dup 1 > if
+  1- dup 1- recurse swap recurse + then)
+\
+
+<fib>/b1ɨʌʟ⟨end⟩1zb1z<fib>d<fib>s⟨end⟩\
+
+ɪ<fib>o
