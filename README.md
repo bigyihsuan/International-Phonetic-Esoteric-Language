@@ -25,4 +25,4 @@ $ python3 interpreter.py [options] codeFile
 * `-d`: Runs the interpreter in debug mode. The interpreter will print the label mappings and the parsed lexemes. It will also print the data and execution stacks after every instruction.
 
 ## Documentation
-More information can be found at the [Esolangs wiki page](https://esolangs.org/wiki/International_Phonetic_Esoteric_Language) for t his language.
+More information can be found at the [Esolangs wiki page](https://esolangs.org/wiki/International_Phonetic_Esoteric_Language) for this language.
