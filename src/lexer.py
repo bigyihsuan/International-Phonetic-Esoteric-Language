@@ -59,7 +59,7 @@ def getNextToken(code):
                 return (code[strPos+len(lexeme)+padding:], Lex(T.FUNDEFSTART, c))
             elif c == "\\":
                 return (code[strPos+len(lexeme)+padding:], Lex(T.FUNDEFEND, c))
-            elif c == "⟨":
+            elif c == "|":
                 lexstate = LS.INLABEL
             elif c == "[":
                 return (code[strPos+len(lexeme):], Lex(T.LISTBEGIN, lexeme))
@@ -107,7 +107,7 @@ def getNextToken(code):
 
         elif lexstate == LS.INLABEL:
             lexeme += c
-            if c == "⟩":
+            if c == "|":
                 return (code[start+len(lexeme):], Lex(T.LABEL, lexeme[1:-1]))
 
         elif lexstate == LS.INFUNCTIONNAME:

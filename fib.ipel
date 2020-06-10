@@ -1,8 +1,10 @@
+<fib>/b1ɨʌʟ|end|1zb1z<fib>d<fib>s|end|\
+
 <fibCommented> (n1 -- n2)
 (generates the n1-th fibonacci number)
 /
 (check for 1)
-b1ɨʌʟ⟨end⟩
+b1ɨʌʟ|end|
 
 (else)
 (do fib)
@@ -13,11 +15,7 @@ b
 d
 <fib>
 s
-⟨end⟩
-(  dup 1 > if
-  1- dup 1- recurse swap recurse + then)
+|end|
 \
-
-<fib>/b1ɨʌʟ⟨end⟩1zb1z<fib>d<fib>s⟨end⟩\
 
 ɪ<fib>o
