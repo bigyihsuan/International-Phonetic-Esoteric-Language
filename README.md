@@ -252,7 +252,7 @@ Control structures in IPEL change where the instruction pointer goes next.
 | Character  | Stack Effect | Comment                                                      |
 | ---------- | ------------ | ------------------------------------------------------------ |
 | `ʌ`        | `(con -- )`  | Conditional Skip: If `con` is truthy, skip the next instruction. |
-| `|label|` | `( -- )`     | Label: Signifies a label at the location of `❬label❭` with the name `str`. |
+| `\|label\|` | `( -- )`     | Label: Signifies a label at the location of `❬label❭` with the name `str`. |
 | `ʟ⟨label⟩` | `( -- )`     | Go-To Label: Jumps execution to the instruction after `⟨label⟩`. |
 
 ### Conditional Skip
