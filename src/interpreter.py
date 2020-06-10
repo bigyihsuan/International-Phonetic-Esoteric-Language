@@ -19,7 +19,7 @@ executionStack = []
 
 debugmode = False
 
-if (len(sys.argv) >= 1):
+if len(sys.argv) > 1:
     foundFile = -1
     for i in range(1, len(sys.argv)):
         if os.path.isfile(sys.argv[i]):
@@ -50,7 +50,8 @@ if (len(sys.argv) >= 1):
 
             if not parser.validateLexemes(lexemes, labels):
                 os.abort()
+
             evaluate(lexemes, labels, debugmode, unvoiced, voiced, executionStack)
 else:
-    print("")
+    print("Code file not found")
 
