@@ -249,7 +249,7 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
         except:
             return
     elif instruction == "o":
-        print(str(currentStack.pop()))
+        print(currentStack.pop())
     elif instruction == "ɤ":
         out = ""
         if type(currentStack[-1]) == list:

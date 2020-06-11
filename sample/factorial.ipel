@@ -44,4 +44,15 @@ t (push stack size)
 
 <factorial>/b1əɐʌʟ|end||loop|b1zb1əʌʟ|loop||mult|ft1əʌʟ|mult||end|\
 
-ɪ<factorial>o
+<f>/
+1 (push 1)
+d (swap)
+1s (increment n)
+1 (push 1)
+ɑ (loop from 1 to n+1)
+ef (multiply by index)
+1esø (increment index)
+ɒ (end loop)
+\
+
+ɪ<f>o

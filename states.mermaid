@@ -41,5 +41,10 @@ graph LR
     LABEL -- "[^⟩]" --> LABEL
     LABEL -- "⟩" --> END
 
+
+    %% For-Loop
+    BEGIN -- "ɑ" --> LOOPSTART --> END
+    BEGIN -- "ɒ" --> LOOPEND --> END
+
     %% Everything else
     BEGIN -- "else" --> INSTRUCTION --> END

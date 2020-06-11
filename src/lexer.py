@@ -67,6 +67,12 @@ def getNextToken(code):
                 return (code[strPos+len(lexeme):], Lex(T.LISTEND, lexeme))
             elif c == ".":
                 return (code[strPos+len(lexeme):], Lex(T.LISTSEP, lexeme))
+            elif c == "ɑ":
+                return (code[strPos+len(lexeme):], Lex(T.LOOPSTART, lexeme))
+            elif c == "ɒ":
+                return (code[strPos+len(lexeme):], Lex(T.LOOPEND, lexeme))
+            elif c == "ɛ":
+                return (code[strPos+len(lexeme):], Lex(T.LOOPEXIT, lexeme))
             else:
                 lexstate = LS.ININSTRUCTION
 
@@ -76,18 +82,9 @@ def getNextToken(code):
                 return (code[start+len(lexeme):], Lex(T.COMMENT, lexeme))
 
         elif lexstate == LS.INSTRING:
-            if sawEscape:
-                sawEscape = False
-                if c in "\n":
-                    c = ""
-                elif c in '\\\'\"abfnrtv':
-                    c = "\\{}".format(c)
-                lexeme += c
-            if c == "\\":
-                sawEscape = True
             lexeme += c
             if c == '"':
-                return (code[start+len(lexeme):], Lex(T.STRING, lexeme))
+                return (code[start+len(lexeme):], Lex(T.STRING, bytearray(lexeme, "utf-8").decode("unicode_escape")))
 
         elif lexstate == LS.INNUMBER:
             lexeme += c

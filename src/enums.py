@@ -16,6 +16,9 @@ class Token(Flag):
     LABEL = auto()
     JUMP = auto()
     INSTRUCTION = auto()
+    LOOPSTART = auto()
+    LOOPEND = auto()
+    LOOPEXIT = auto()
     DONE = auto()
 
 class LexState(Flag):
