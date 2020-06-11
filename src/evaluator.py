@@ -54,9 +54,11 @@ def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack):
                 ep += 1 if currentStack.pop() else 0
             # loop index getters and setters
             elif lex[ep].lexeme == "e":
-                currentStack.append(executionStack[-1])
+                if numLoops > 0:
+                    currentStack.append(executionStack[-1])
             elif lex[ep].lexeme == "ø":
-                executionStack[-1] = currentStack.pop()
+                if numLoops > 0:
+                    executionStack[-1] = currentStack.pop()
             else:
                 executeInstruction(lex[ep].lexeme, unvoiced, voiced, currentStack)
 
@@ -87,15 +89,16 @@ def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack):
                         executionStack.pop()
                         numLoops -= 1
             if lex[ep].token == T.LOOPEXIT:
-                # find the next LOOPEXIT in the label mappings
-                for i in range(ep, len(lex)):
-                    if i in lab:
-                        ep = lab[i] # move execution to past the loop end
-                        # clean up execution stack
-                        executionStack.pop()
-                        executionStack.pop()
-                        numLoops -= 1
-                        break
+                if numLoops > 0:
+                    # find the next LOOPEXIT in the label mappings
+                    for i in range(ep, len(lex)):
+                        if i in lab:
+                            ep = lab[i] # move execution to past the loop end
+                            # clean up execution stack
+                            executionStack.pop()
+                            executionStack.pop()
+                            numLoops -= 1
+                            break
 
 
         if executionDepth > 0 and lex[ep].token == T.FUNDEFEND:
