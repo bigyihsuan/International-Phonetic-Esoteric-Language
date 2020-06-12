@@ -215,7 +215,7 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
             currentStack.append(l[n])
     elif instruction == "χ":
         if type(currentStack[-1]) in [int,float]:
-            currentStack.append(chr(ceil(currentStack.pop())))
+            currentStack.append(chr(math.ceil(currentStack.pop())))
     elif instruction == "ʁ":
         if type(currentStack[-1]) == str:
             for c in currentStack.pop():
