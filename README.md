@@ -15,10 +15,11 @@ Install this by cloning this repository (`https://github.com/bigyihsuan/Internat
 Execute the IPEL code by navigating to the repository folder and running `interpreter.py` with Python 3.
 
 ```
-$ python3 interpreter.py [options] codeFile
+$ python3 interpreter.py [options] (codeFile | code)
 ```
 
 `codeFile` is any file that contains IPEL code.
+`code` is a string that contains IPEL code.
 
 `[options]` is one of the following:
 

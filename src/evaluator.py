@@ -2,14 +2,16 @@ from enums import Token as T
 from enums import EvalState as E
 from instructions import executeInstruction
 
+import math
 
-def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack):
+
+def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack, currentStack, otherStack):
     """
     Evaluates code.
     Input is a list of lexemes, and a dictionary of labels.
     Most definitions of instructions are located here.
+    Returns the current stack and the other stack as a tuple (current, other).
     """
-    currentStack = unvoiced
 
     numList = 0
     numFun = 0
@@ -27,6 +29,7 @@ def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack):
     while ep < len(lex):
         if debugmode:
             print(ep, lex[ep].token)
+        otherStack = voiced if currentStack == unvoiced else unvoiced
 
         if lex[ep].token == T.NUMBER:
             if "." in lex[ep].lexeme: # number is a float
@@ -59,6 +62,18 @@ def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack):
             elif lex[ep].lexeme == "ø":
                 if numLoops > 0:
                     executionStack[-1] = currentStack.pop()
+            elif lex[ep].lexeme == "ɸ":
+                currentStack = unvoiced
+                otherStack = voiced
+            elif lex[ep].lexeme == "β":
+                currentStack = voiced
+                otherStack = unvoiced
+            elif lex[ep].lexeme == "ɓ":
+                currentStack.pop(1 if currentStack == unvoiced else 0)
+            elif lex[ep].lexeme == "k":
+                otherStack.append(currentStack.pop())
+            elif lex[ep].lexeme == "g":
+                currentStack.append(otherStack.pop())
             else:
                 executeInstruction(lex[ep].lexeme, unvoiced, voiced, currentStack)
 
@@ -108,8 +123,13 @@ def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack):
 
         if debugmode:
             print(lex[ep].lexeme)
-            print("Unvoiced:", unvoiced)
-            print("Voiced:", voiced)
+            if currentStack == unvoiced:
+                print("Unvoiced:", unvoiced, "<-- currentStack")
+                print("Voiced:", voiced)
+            else:
+                print("Unvoiced:", unvoiced)
+                print("Voiced:", voiced, "<-- currentStack")
             print("Execution:", executionStack)
             print()
         ep += 1
+    return (currentStack, otherStack)

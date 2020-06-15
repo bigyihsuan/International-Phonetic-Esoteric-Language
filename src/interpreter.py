@@ -17,6 +17,9 @@ unvoiced = []
 voiced = []
 executionStack = []
 
+currentStack = unvoiced
+otherStack = voiced
+
 debugmode = False
 
 if len(sys.argv) > 1:
@@ -24,34 +27,36 @@ if len(sys.argv) > 1:
     for i in range(1, len(sys.argv)):
         if os.path.isfile(sys.argv[i]):
             foundFile = i
+
+    if sys.argv[1] == "-d":
+        debugmode = True
+
     if foundFile == -1:
-        print("ERROR: IPEL code file not found")
+        code = sys.argv[2] if debugmode else sys.argv[1]
     else:
-        if sys.argv[1] == "-d":
-            debugmode = True
+        source = open(sys.argv[foundFile], "r")
+        code = source.read()
 
-        with open(sys.argv[foundFile], "r") as source:
-            code = source.read() + " "
+    code += " "
+    lastlex = lexer.Lex(T.BEGIN, "")
+    while lastlex.token != T.END:
+        code, lex = parser.getNextToken(code)
+        if (lex.token != T.COMMENT):
+            lexemes.append(lex)
+        lastlex = lex
+        if lastlex.token == T.ERR:
+            print("LEXING ERROR:", lastlex.lexeme)
+            os.abort()
 
-            lastlex = lexer.Lex(T.BEGIN, "")
-            while lastlex.token != T.END:
-                code, lex = parser.getNextToken(code)
-                if (lex.token != T.COMMENT):
-                    lexemes.append(lex)
-                lastlex = lex
-                if lastlex.token == T.ERR:
-                    print("LEXING ERROR:", lastlex.lexeme)
-                    os.abort()
+    parser.mapLabels(lexemes, labels)
+    if debugmode:
+        print("Lexemes:", lexemes)
+        print("Label Mapping:", labels)
 
-            parser.mapLabels(lexemes, labels)
-            if debugmode:
-                print("Lexemes:", lexemes)
-                print("Label Mapping:", labels)
+    if not parser.validateLexemes(lexemes, labels):
+        os.abort()
 
-            if not parser.validateLexemes(lexemes, labels):
-                os.abort()
-
-            evaluate(lexemes, labels, debugmode, unvoiced, voiced, executionStack)
+    currentStack, otherStack = evaluate(lexemes, labels, debugmode, unvoiced, voiced, executionStack, currentStack, otherStack)
 else:
     print("Code file not found")
 
