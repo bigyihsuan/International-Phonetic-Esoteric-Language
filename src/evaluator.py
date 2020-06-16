@@ -54,7 +54,9 @@ def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack, currentStack
             if lex[ep].lexeme == "ʟ": # Unconditional jump
                 ep = lab[lex[ep+1].lexeme]
             elif lex[ep].lexeme == "ʌ": # Conditional skip
-                ep += 1 if currentStack.pop() else 0
+                ele = currentStack.pop()
+                truthy = ele != 0 or ele != "" or ele != []
+                ep += 1 if truthy else 0
             # loop index getters and setters
             elif lex[ep].lexeme == "e":
                 if numLoops > 0:

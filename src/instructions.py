@@ -102,10 +102,7 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
         if type(currentStack[-1]) in [int,float] and type(currentStack[-2]) in [int,float]:
             b = currentStack.pop()
             a = currentStack.pop()
-            if type(a) == int and type(b) == int:
-                quotient = a // b if b != 0 else 0
-            else:
-                quotient = a / b if b != 0 else 0
+            quotient = a / b if b != 0 else 0
             currentStack.append(quotient)
     elif instruction == "ⱱ":
         if type(currentStack[-1]) in [int,float] and type(currentStack[-2]) in [int,float]:
