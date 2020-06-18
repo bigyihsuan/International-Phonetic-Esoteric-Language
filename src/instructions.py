@@ -241,3 +241,9 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
             for e in currentStack.pop():
                 out += str(e)
         print(out)
+    elif instruction == "u":
+        print(currentStack.pop(), end='')
+    elif instruction == "ɯ":
+        trail = currentStack.pop()
+        ele = currentStack.pop()
+        print(ele, end=trail)
