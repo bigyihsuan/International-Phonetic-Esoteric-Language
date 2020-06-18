@@ -5,7 +5,7 @@ from instructions import executeInstruction
 import math
 
 
-def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack, currentStack, otherStack):
+def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack, currentStack, otherStack, register):
     """
     Evaluates code.
     Input is a list of lexemes, and a dictionary of labels.
@@ -22,13 +22,15 @@ def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack, currentStack
         print("Unvoiced:", unvoiced)
         print("Voiced:", voiced)
         print("Execution:", executionStack)
+        print("Register:", register)
         print()
 
     executionDepth = 0
     ep = 0
     while ep < len(lex):
         if debugmode:
-            print(ep, lex[ep].token)
+            print(ep, lex[ep].token, lex[ep].lexeme)
+
         otherStack = voiced if currentStack == unvoiced else unvoiced
 
         if lex[ep].token == T.NUMBER:
@@ -70,6 +72,7 @@ def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack, currentStack
             elif lex[ep].lexeme == "ø":
                 if numLoops > 0:
                     executionStack[-1] = currentStack.pop()
+            # voicing
             elif lex[ep].lexeme == "ɸ":
                 currentStack = unvoiced
                 otherStack = voiced
@@ -82,6 +85,11 @@ def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack, currentStack
                 otherStack.append(currentStack.pop())
             elif lex[ep].lexeme == "g":
                 currentStack.append(otherStack.pop())
+            # Register instructions
+            elif lex[ep].lexeme == "w":
+                register = currentStack.pop()
+            elif lex[ep].lexeme == "ʍ":
+                currentStack.append(register)
             else:
                 executeInstruction(lex[ep].lexeme, unvoiced, voiced, currentStack)
 
@@ -130,7 +138,6 @@ def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack, currentStack
 
 
         if debugmode:
-            print(lex[ep].lexeme)
             if currentStack == unvoiced:
                 print("Unvoiced:", unvoiced, "<-- currentStack")
                 print("Voiced:", voiced)
@@ -138,6 +145,7 @@ def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack, currentStack
                 print("Unvoiced:", unvoiced)
                 print("Voiced:", voiced, "<-- currentStack")
             print("Execution:", executionStack)
+            print("Register:", register)
             print()
         ep += 1
     return (currentStack, otherStack)

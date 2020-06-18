@@ -19,6 +19,9 @@ unvoiced = []
 voiced = []
 executionStack = []
 
+# Register
+register = None
+
 currentStack = unvoiced
 otherStack = voiced
 
@@ -58,7 +61,7 @@ if len(sys.argv) > 1:
     if not parser.validateLexemes(lexemes, labels):
         os.abort()
 
-    currentStack, otherStack = evaluate(lexemes, labels, debugmode, unvoiced, voiced, executionStack, currentStack, otherStack)
+    currentStack, otherStack = evaluate(lexemes, labels, debugmode, unvoiced, voiced, executionStack, currentStack, otherStack, register)
 else:
     print("Code file not found")
 
