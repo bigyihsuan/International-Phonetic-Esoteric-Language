@@ -27,3 +27,4 @@ $ python3 interpreter.py [options] (codeFile | code)
 
 ## Documentation
 More information can be found at the [Esolangs wiki page](https://esolangs.org/wiki/International_Phonetic_Esoteric_Language) for this language.
+An IPA chart containing the used IPA characters can be found in [this Google Sheet](https://docs.google.com/spreadsheets/d/1LV9KpMahMhYt73ZeXxkj4kYb3jLvCFYeUnyAg5oGUDs/edit?usp=sharing).
