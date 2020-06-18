@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import enums as E
 from enums import Token as T
 import sys
