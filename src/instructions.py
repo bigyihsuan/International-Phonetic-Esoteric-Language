@@ -222,7 +222,9 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
     elif instruction == "i":
         currentStack.append(input().strip())
     elif instruction == "y":
-        currentStack.append(input().strip().split())
+        ele = input().strip().split()
+        for e in ele:
+            currentStack.append(e)
     elif instruction == "ɪ":
         try:
             currentStack.append(int(input().strip()))
