@@ -92,7 +92,7 @@ def getNextToken(code):
                 return (code[start+len(lexeme):], Lex(T.NUMBER, lexeme[1:-1]))
             if c == ".":
                 lexstate = LS.INFLOAT
-            elif c not in string.digits:
+            elif c not in string.digits and c not in "-":
                 return (code[start+len(lexeme):], Lex(T.ERR, "Invalid character in multidigit number '{}'".format(c)))
 
         elif lexstate == LS.INFLOAT:

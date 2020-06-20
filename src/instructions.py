@@ -250,7 +250,7 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
                         elif c in string.digits:
                             o.append(c)
                     if inNum and not inList:
-                        if c in string.digits or c in ".":
+                        if c in string.digits or c in "." or c in "-":
                             n += c
                         elif c in "}":
                             o.append(eval(n))
