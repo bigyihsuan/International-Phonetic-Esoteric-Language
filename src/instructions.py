@@ -16,23 +16,26 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
     elif instruction == "t":
         currentStack.append(len(currentStack))
     elif instruction == "d":
-        temp = currentStack[-1]
-        currentStack[-1] = currentStack[-2]
-        currentStack[-2] = temp
+        if len(currentStack) > 1:
+            temp = currentStack[-1]
+            currentStack[-1] = currentStack[-2]
+            currentStack[-2] = temp
     elif instruction == "ʈ":
-        a = currentStack[-1]
-        b = currentStack[-2]
-        c = currentStack[-3]
-        currentStack[-1] = b
-        currentStack[-2] = c
-        currentStack[-3] = a
+        if len(currentStack) > 2:
+            a = currentStack[-1]
+            b = currentStack[-2]
+            c = currentStack[-3]
+            currentStack[-1] = b
+            currentStack[-2] = c
+            currentStack[-3] = a
     elif instruction == "ɖ":
-        a = currentStack[-1]
-        b = currentStack[-2]
-        c = currentStack[-3]
-        currentStack[-1] = c
-        currentStack[-2] = a
-        currentStack[-3] = b
+        if len(currentStack) > 2:
+            a = currentStack[-1]
+            b = currentStack[-2]
+            c = currentStack[-3]
+            currentStack[-1] = c
+            currentStack[-2] = a
+            currentStack[-3] = b
     elif instruction == "c":
         ints = list(filter(lambda x: type(x) == int, currentStack))
         strs = list(filter(lambda x: type(x) == str, currentStack))
