@@ -17,7 +17,7 @@ class Lex:
         return self.token != token
 
     def __repr__(self):
-        return "<Lex: {}, \"{}\">".format(self.token, self.lexeme)
+        return "<Lex: {}, {}>".format(self.token, repr(self.lexeme))
 
 def getNextToken(code):
     """ Input is a string.
@@ -83,8 +83,14 @@ def getNextToken(code):
 
         elif lexstate == LS.INSTRING:
             lexeme += c
-            if c == '"':
+            if c == '\\':
+                sawEscape = True
+                lexeme += c
+            if c == '"' and lexeme[-1] not in "\\" and lexeme[-2] not in "\\" and not sawEscape:
+                lexeme = lexeme.replace("\\\\", "\\")
                 return (code[start+len(lexeme):], Lex(T.STRING, bytearray(lexeme, "utf-8").decode("unicode_escape")))
+            if sawEscape:
+                sawEscape = False
 
         elif lexstate == LS.INNUMBER:
             lexeme += c

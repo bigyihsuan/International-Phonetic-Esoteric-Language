@@ -29,7 +29,7 @@ def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack, currentStack
     ep = 0
     while ep < len(lex):
         if debugmode:
-            print(ep, lex[ep].token, lex[ep].lexeme)
+            print(ep, lex[ep].token, repr(lex[ep].lexeme))
 
         otherStack = voiced if currentStack == unvoiced else unvoiced
 
