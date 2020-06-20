@@ -45,6 +45,8 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
         currentStack = lsts + strs + ints
     elif instruction == "ɟ":
         currentStack.reverse()
+    elif instruction == "q":
+        currentStack.append(currentStack[-2])
 
 # Comparisons and Logical Operators
     elif instruction == "ɨ":
