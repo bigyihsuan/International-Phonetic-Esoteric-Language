@@ -110,7 +110,7 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
         if type(currentStack[-1]) in [int,float] and type(currentStack[-2]) in [int,float]:
             b = currentStack.pop()
             a = currentStack.pop()
-            currentStack.append(a & b)
+            currentStack.append(a % b)
     elif instruction == "ʃ":
         if type(currentStack[-1]) in [int,float] and type(currentStack[-2]) in [int,float]:
             b = currentStack.pop()
