@@ -1,4 +1,4 @@
-import math
+import math, string
 
 def executeInstruction(instruction, unvoiced, voiced, currentStack):
     """
@@ -226,15 +226,73 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
         for e in ele:
             currentStack.append(e)
     elif instruction == "ɪ":
+        ele = input()
         try:
-            currentStack.append(int(input().strip()))
+            if "{" in ele[0] and "}" in ele[-1]:
+                ele = eval(ele[1:-1])
+            elif ele in string.digits:
+                ele = eval(ele)
+            elif "[" in ele[0] and "]" in ele[-1]:
+                o = []
+                inNum, inStr, inList = False, False, False
+                numList = 0
+                n, s, l = "", "", ""
+                for i,c in enumerate(ele):
+                    if not inNum and not inStr and not inList:
+                        if c in "{":
+                            inNum = True
+                        elif c in '"':
+                            inStr = True
+                            s += c
+                        elif c in "[":
+                            inList = True
+                            numList += 0
+                        elif c in string.digits:
+                            o.append(c)
+                    if inNum and not inList:
+                        if c in string.digits or c in ".":
+                            n += c
+                        elif c in "}":
+                            o.append(eval(n))
+                            n = ""
+                            inNum = False
+                    elif inStr and not inList:
+                        s += c
+                        if c in '"':
+                            s = bytearray(s+c, "utf-8").decode("unicode_escape")
+                            o.append(eval(s))
+                            inStr = False
+                    elif inList:
+                        if c in "[":
+                            l += c
+                            numList += 1
+                        elif not inStr and c in "]" and numList > 0:
+                            l += c
+                            numList -= 1
+                        elif not inNum and not inStr and c in ".":
+                            l += ","
+                        elif c in "{":
+                            inNum = True
+                        elif inNum:
+                            if c in "}":
+                                l += ""
+                                inNum = False
+                            else:
+                                l += c
+                        else:
+                            l += c
+                if l != "": # not sure what happened here
+                    ele = eval(l)
+                else:
+                    ele = o
+            elif '"' in ele[0] and '"' in ele[-1]:
+                ele = eval(ele)
+            else:
+                ele = ele
         except:
-            return
-    elif instruction == "ʏ":
-        try:
-            currentStack.append(float(input().strip()))
-        except:
-            return
+            pass
+        finally:
+            currentStack.append(ele)
     elif instruction == "o":
         print(currentStack.pop())
     elif instruction == "ɤ":
