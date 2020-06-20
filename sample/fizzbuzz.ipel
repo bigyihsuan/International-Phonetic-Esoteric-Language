@@ -1,0 +1,12 @@
+{101}1ɑeb3ⱱɐbʌʟ|a|"Fizz"u|a|q5ⱱɐbʌʟ|b|"Buzz"u|b|ɞʌue1sø"\n"uɒ
+
+{101}1                                                        (push loop bounds 1 to 101)
+      ɑ                                                       (start loop)
+       eb                                                     (push and dup loop index)
+         3ⱱɐbʌʟ|c|"Fizz"u|c|                                  (print if fizzy)
+                            q                                 (OVER)
+                             5ⱱɐbʌʟ|d|"Buzz"u|d|              (print if buzzy)
+                                                ɞʌu           (else print the number)
+                                                   e1sø       (increment loop index)
+                                                       "\n"u  (print a newline)
+                                                            ɒ (end loop)
