@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-import enums as E
-from enums import Token as T
+import util as E
+from util import Token as T
 import sys
 import io
 import lexer

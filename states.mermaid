@@ -7,15 +7,16 @@ graph LR
     BEGIN -- "[0-9]" --> DIGIT
     BEGIN -- "{" --> MULTIDIGIT
     DIGIT --> NUMBER
-    MULTIDIGIT -- "[0-9]+" --> MULTIDIGIT
-    FLOAT -- "[0-9]*" --> FLOAT
-    MULTIDIGIT -- "." --> MULTIFLOAT
-    MULTIDIGIT -- "}" --> NUMBER
-    MULTIDIGIT -- "else" --> ERR
-    MULTIFLOAT -- "else" --> ERR
-    MULTIFLOAT -- "[0-9]" --> FLOAT
-    FLOAT -- "}" --> NUMBER
-    FLOAT -- "else" --> ERR
+    MULTIDIGIT -- "[0-9]+" --> MULTIDIGIT10
+    MULTIDIGIT -- "[0-9A-Za-z]+" --> MULTIDIGIT36
+    MULTIDIGIT10 -- "." --> MULTIFLOAT10
+    MULTIDIGIT36 -- "." --> MULTIFLOAT36
+    MULTIFLOAT10 -- "[0-9]*" --> MULTIFLOAT10
+    MULTIFLOAT36 -- "[0-9A-Za-z]*" --> MULTIFLOAT36
+    MULTIDIGIT10 -- "else" --> ERR
+    MULTIDIGIT36 -- "else" --> ERR
+    MULTIFLOAT10 & MULTIFLOAT36 -- "}" --> NUMBER
+    MULTIFLOAT10 & MULTIFLOAT36 -- "else" --> ERR
     NUMBER --> END
 
     %% Strings

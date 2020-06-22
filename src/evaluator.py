@@ -1,5 +1,6 @@
-from enums import Token as T
-from enums import EvalState as E
+from util import Token as T
+from util import EvalState as E
+from util import convert_base
 from instructions import executeInstruction
 
 import math

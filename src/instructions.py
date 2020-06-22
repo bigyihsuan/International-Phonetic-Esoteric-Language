@@ -1,4 +1,4 @@
-import math, string
+import math, string, util
 
 def executeInstruction(instruction, unvoiced, voiced, currentStack):
     """
@@ -234,68 +234,67 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
         ele = input()
         try:
             if "{" in ele[0] and "}" in ele[-1]:
-                ele = eval(ele[1:-1])
+                base = 10
+                for d in ele:
+                    if d in string.ascii_letters:
+                        base = 36
+                        break
+                ele = util.convert_base(ele[1:-1], base)
             elif ele in string.digits:
                 ele = eval(ele)
             elif "[" in ele[0] and "]" in ele[-1]:
-                o = []
-                inNum, inStr, inList = False, False, False
-                numList = 0
-                n, s, l = "", "", ""
-                for i,c in enumerate(ele):
-                    if not inNum and not inStr and not inList:
-                        if c in "{":
-                            inNum = True
-                        elif c in '"':
-                            inStr = True
-                            s += c
-                        elif c in "[":
-                            inList = True
-                            numList += 0
-                        elif c in string.digits:
-                            o.append(c)
-                    if inNum and not inList:
-                        if c in string.digits or c in "." or c in "-":
+                outputList = "["
+                n, s = "", ""
+                inNum, inStr = False, False
+                sawEscape = False
+                for c in ele[1:-1]:
+                    if c in "{" and not inNum:
+                        inNum = True
+                        continue
+                    elif c in '"' and not inStr:
+                        inStr = True
+                        s += '"'
+                        continue
+                    elif c in string.digits and not inNum and not inStr:
+                        outputList += c + ","
+                        continue
+                    elif c in "[":
+                        outputList += c
+                        continue
+                    elif c in "]":
+                        outputList += c + ","
+                        continue
+
+                    if inNum:
+                        if c not in "}":
                             n += c
-                        elif c in "}":
-                            o.append(eval(n))
+                        else:
+                            base = 10
+                            for d in string.ascii_letters:
+                                if d in n:
+                                    base = 36
+                                    break
+                            num = str(util.convert_base(n, base)) + ","
+                            outputList += num
                             n = ""
                             inNum = False
-                    elif inStr and not inList:
+                    elif inStr:
+                        if c in "\\":
+                            sawEscape = True
+                            s += c
                         s += c
-                        if c in '"':
-                            s = bytearray(s+c, "utf-8").decode("unicode_escape")
-                            o.append(eval(s))
-                            inStr = False
-                    elif inList:
-                        if c in "[":
-                            l += c
-                            numList += 1
-                        elif not inStr and c in "]" and numList > 0:
-                            l += c
-                            numList -= 1
-                        elif not inNum and not inStr and c in ".":
-                            l += ","
-                        elif c in "{":
-                            inNum = True
-                        elif inNum:
-                            if c in "}":
-                                l += ""
-                                inNum = False
-                            else:
-                                l += c
-                        else:
-                            l += c
-                if l != "": # not sure what happened here
-                    ele = eval(l)
-                else:
-                    ele = o
+                        if c in '"' and not sawEscape:
+                            outputList += bytearray(s, "utf-8").decode("unicode_escape")
+                            s = ""
+                        if sawEscape:
+                            sawEscape = False
+                outputList += "]"
+                outputList = outputList.replace("\\\\", "\\")
+                ele = eval(outputList)
             elif '"' in ele[0] and '"' in ele[-1]:
                 ele = eval(ele)
             else:
                 ele = ele
-        except:
-            pass
         finally:
             currentStack.append(ele)
     elif instruction == "o":
