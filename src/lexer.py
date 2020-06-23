@@ -1,5 +1,5 @@
-from enums import Token as T
-from enums import LexState as LS
+from util import Token as T
+from util import LexState as LS
 import string
 
 class Lex:
@@ -82,12 +82,12 @@ def getNextToken(code):
                 return (code[start+len(lexeme):], Lex(T.COMMENT, lexeme))
 
         elif lexstate == LS.INSTRING:
-            lexeme += c
             if c == '\\':
                 sawEscape = True
                 lexeme += c
-            if c == '"' and lexeme[-1] not in "\\" and lexeme[-2] not in "\\" and not sawEscape:
-                lexeme = lexeme.replace("\\\\", "\\")
+            else:
+                lexeme += c
+            if c == '"' and not sawEscape:
                 return (code[start+len(lexeme):], Lex(T.STRING, bytearray(lexeme, "utf-8").decode("unicode_escape")))
             if sawEscape:
                 sawEscape = False
@@ -95,17 +95,17 @@ def getNextToken(code):
         elif lexstate == LS.INNUMBER:
             lexeme += c
             if c == "}":
-                return (code[start+len(lexeme):], Lex(T.NUMBER, lexeme[1:-1]))
+                return (code[start+len(lexeme):], Lex(T.NUMBER, lexeme[1:-1].upper()))
             if c == ".":
                 lexstate = LS.INFLOAT
-            elif c not in string.digits and c not in "-":
+            elif c not in string.digits + string.ascii_letters and c not in "-":
                 return (code[start+len(lexeme):], Lex(T.ERR, "Invalid character in multidigit number '{}'".format(c)))
 
         elif lexstate == LS.INFLOAT:
             lexeme += c
             if c == "}":
-                return (code[start+len(lexeme):], Lex(T.NUMBER, lexeme[1:-1]))
-            if c not in string.digits:
+                return (code[start+len(lexeme):], Lex(T.NUMBER, lexeme[1:-1].upper()))
+            if c not in string.digits + string.ascii_letters:
                 return (code[start+len(lexeme):], Lex(T.ERR, "Invalid character in float number '{}'".format(c)))
 
         elif lexstate == LS.INLABEL:

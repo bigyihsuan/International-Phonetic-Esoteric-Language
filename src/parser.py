@@ -1,4 +1,4 @@
-from enums import Token as T
+from util import Token as T
 import lexer
 import os
 

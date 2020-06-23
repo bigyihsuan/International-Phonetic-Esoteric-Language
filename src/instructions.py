@@ -1,4 +1,4 @@
-import math, string
+import math, string, util
 
 def executeInstruction(instruction, unvoiced, voiced, currentStack):
     """
@@ -233,69 +233,66 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
     elif instruction == "ɪ":
         ele = input()
         try:
-            if "{" in ele[0] and "}" in ele[-1]:
-                ele = eval(ele[1:-1])
+            if len(ele) > 0 and "{" in ele[0] and "}" in ele[-1]:
+                base = 10
+                for d in ele:
+                    if d in string.ascii_letters:
+                        base = 36
+                        break
+                ele = util.convert_base(ele[1:-1], base)
             elif ele in string.digits:
                 ele = eval(ele)
-            elif "[" in ele[0] and "]" in ele[-1]:
-                o = []
-                inNum, inStr, inList = False, False, False
-                numList = 0
-                n, s, l = "", "", ""
-                for i,c in enumerate(ele):
-                    if not inNum and not inStr and not inList:
-                        if c in "{":
-                            inNum = True
-                        elif c in '"':
-                            inStr = True
-                            s += c
-                        elif c in "[":
-                            inList = True
-                            numList += 0
-                        elif c in string.digits:
-                            o.append(c)
-                    if inNum and not inList:
-                        if c in string.digits or c in "." or c in "-":
-                            n += c
-                        elif c in "}":
-                            o.append(eval(n))
-                            n = ""
-                            inNum = False
-                    elif inStr and not inList:
-                        s += c
-                        if c in '"':
-                            s = bytearray(s+c, "utf-8").decode("unicode_escape")
-                            o.append(eval(s))
-                            inStr = False
-                    elif inList:
-                        if c in "[":
-                            l += c
-                            numList += 1
-                        elif not inStr and c in "]" and numList > 0:
-                            l += c
-                            numList -= 1
-                        elif not inNum and not inStr and c in ".":
-                            l += ","
-                        elif c in "{":
-                            inNum = True
-                        elif inNum:
-                            if c in "}":
-                                l += ""
-                                inNum = False
+            elif len(ele) > 0 and "[" in ele[0] and "]" in ele[-1]:
+                # copy-pasted from interpreter.py and evaluator.py
+                import lexer, parser
+                ele = ele + " "
+                lexes = []
+                outputList = []
+                lastlex = lexer.Lex(util.Token.BEGIN, "")
+                while lastlex.token != util.Token.END:
+                    ele, lex = parser.Parser().getNextToken(ele)
+                    if (lex.token != util.Token.COMMENT):
+                        lexes.append(lex)
+                    lastlex = lex
+
+                for ep,lex in enumerate(lexes):
+                    if lexes[ep].token == util.Token.NUMBER:
+                        base = 10
+                        for d in lexes[ep].lexeme:
+                            if d in string.ascii_letters:
+                                base = 36
+                                break
+                        outputList.append(util.convert_base(lexes[ep].lexeme, base))
+                    elif lexes[ep].token == util.Token.STRING:
+                        outputList.append(lexes[ep].lexeme[1:-1])
+                        continue
+                    elif lexes[ep].token == util.Token.LISTBEGIN:
+                        numList = 1
+                        list = "["
+                        while numList > 0:
+                            ep += 1
+                            if lexes[ep].token == util.Token.NUMBER:
+                                base = 10
+                                for d in lexes[ep].lexeme:
+                                    if d in string.ascii_letters:
+                                        base = 36
+                                        break
+                                list += str(util.convert_base(lexes[ep].lexeme, base))
                             else:
-                                l += c
-                        else:
-                            l += c
-                if l != "": # not sure what happened here
-                    ele = eval(l)
-                else:
-                    ele = o
-            elif '"' in ele[0] and '"' in ele[-1]:
+                                list += lexes[ep].lexeme if lexes[ep].token != util.Token.LISTSEP else ","
+                            if lexes[ep].token == util.Token.LISTBEGIN:
+                                numList += 1
+                            if lexes[ep].token == util.Token.LISTEND:
+                                numList -= 1
+                        outputList = eval(list)
+                        break
+                    elif lexes[ep].token == util.Token.END:
+                        break
+                ele = outputList
+            elif len(ele) > 0 and '"' in ele[0] and '"' in ele[-1]:
                 ele = eval(ele)
             else:
                 ele = ele
-        except:
-            pass
         finally:
             currentStack.append(ele)
     elif instruction == "o":
