@@ -54,7 +54,7 @@ def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack, currentStack
             currentStack.append(eval(list))
 
         if lex[ep].token == T.INSTRUCTION:
-            if lex[ep].lexeme == "ʟ": # Unconditional jump
+            if lex[ep].lexeme == "ɔ": # Unconditional jump
                 ep = lab[lex[ep+1].lexeme]
             elif lex[ep].lexeme == "ʌ": # Conditional skip
                 truthy = False

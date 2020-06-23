@@ -23,7 +23,7 @@ class Parser:
                 loops.append(i+1) # push a LOOPSTART's index
             if i < len(lex):
                 if lex[i].token == T.LABEL and lex[i].lexeme not in lab:
-                    if i > 0 and lex[i-1].lexeme != "ʟ":
+                    if i > 0 and lex[i-1].lexeme != "ɔ":
                         lab[lex[i].lexeme] = i
                 elif i+1 < len(lex):
                     if lex[i].token == T.FUNNAME and lex[i+1].token == T.FUNDEFSTART:
@@ -36,7 +36,7 @@ class Parser:
         Validates the order of lexemes.
         Input is a list of lexemes and a dictionary of labels.
         Returns true if the lexeme list is valid.
-        For example, the Jump instruction is needs a COMMAND with lexeme=="ʟ"
+        For example, the Jump instruction is needs a COMMAND with lexeme=="ɔ"
         followed by a LABEL that has been defined.
         There weill always be a 1 FUNDEDSTART to each FUNDEFEND, as well as LISTBEGIN and LISTEND.
         """
@@ -58,7 +58,7 @@ class Parser:
                     loops += 1
                 if lex[i].token == T.LOOPEND:
                     loops -= 1
-                if lex[i].token == T.INSTRUCTION and lex[i].lexeme == "ʟ":
+                if lex[i].token == T.INSTRUCTION and lex[i].lexeme == "ɔ":
                     if i+1 < len(lex) and lex[i+1].token != T.LABEL:
                         errors.append("Missing label after JUMP at Lex {}".format(i))
                 if i+1 < len(lex):
@@ -92,7 +92,7 @@ Code = COMMENT | FunDef | FunCall | LABEL | Jump | INSTRUCTION | Literal
 FunDef = FUNNAME FunBody
 FunBody = FUNDEFSTART Code FUNDEFEND
 FunCall = FUNNAME
-Jump = "ʟ" LABEL
+Jump = "ɔ" LABEL
 INSTRUCTION
 List = LISTBEGIN {Literal LISTSEP} LISTEND
 Literal = NUMBER | STRING | List

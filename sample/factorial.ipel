@@ -1,7 +1,7 @@
 <factorialCommented> (n -- n!)
 /
 
-b1əɐʌʟ|end| (go to end if n==1. skip jump if n!=1)
+b1əɐʌɔ|end| (go to end if n==1. skip jump if n!=1)
 
 |loop| (while top != 1, duplicate and decrement)
 (check if top == 1 to go to multiplication)
@@ -23,7 +23,7 @@ b (dup)
 
 ʌ (skip next if a==b)
 (-- n n-1)
-ʟ|loop| (jump to loop start if a!=b)
+ɔ|loop| (jump to loop start if a!=b)
 
 |mult| (begin loop for multiplication)
 (-- n n-1 n-2 ... 2 1)
@@ -38,11 +38,11 @@ t (push stack size)
 (-- n n-1 n-2 ... 3 2 size==1?)
 
 ʌ (skip next if size==1)
-ʟ|mult| (loop if not)
+ɔ|mult| (loop if not)
 |end|
 \
 
-<factorial>/b1əɐʌʟ|end||loop|b1zb1əʌʟ|loop||mult|ft1əʌʟ|mult||end|\
+<factorial>/b1əɐʌɔ|end||loop|b1zb1əʌɔ|loop||mult|ft1əʌɔ|mult||end|\
 
 <f>/
 1 (push 1)

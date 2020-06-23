@@ -1,10 +1,10 @@
-<fib>/b1ɨʌʟ|end|1zb1z<fib>d<fib>s|end|\
+<fib>/b1ɨʌɔ|end|1zb1z<fib>d<fib>s|end|\
 
 <fibCommented> (n1 -- n2)
 (generates the n1-th fibonacci number)
 /
 (check for 1)
-b1ɨʌʟ|end|
+b1ɨʌɔ|end|
 
 (else)
 (do fib)
