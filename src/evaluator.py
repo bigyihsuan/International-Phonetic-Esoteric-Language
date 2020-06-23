@@ -3,7 +3,7 @@ from util import EvalState as E
 from util import convert_base
 from instructions import executeInstruction
 
-import math
+import math, string
 
 
 def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack, currentStack, otherStack, register):
@@ -35,10 +35,12 @@ def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack, currentStack
         otherStack = voiced if currentStack == unvoiced else unvoiced
 
         if lex[ep].token == T.NUMBER:
-            if "." in lex[ep].lexeme: # number is a float
-                currentStack.append(float(lex[ep].lexeme))
-            else:
-                currentStack.append(int(lex[ep].lexeme))
+            base = 10
+            for d in lex[ep].lexeme:
+                if d in string.ascii_letters:
+                    base = 36
+                    break
+            currentStack.append(convert_base(lex[ep].lexeme, base))
         if lex[ep].token == T.STRING:
             currentStack.append(lex[ep].lexeme[1:-1])
         if lex[ep].token == T.LISTBEGIN:
