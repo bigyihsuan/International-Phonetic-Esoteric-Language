@@ -17,6 +17,10 @@ Execute the IPEL code by navigating to the repository folder and running `interp
 ```
 $ python3 interpreter.py [options] (codeFile | code)
 ```
+or
+```
+$ ./interpreter.py [options] (codeFile | code)
+```
 
 `codeFile` is any file that contains IPEL code.
 `code` is a string that contains IPEL code.

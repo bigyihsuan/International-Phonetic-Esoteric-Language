@@ -66,13 +66,15 @@ def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack, currentStack
                 elif type(con) in [list]:
                     truthy = con != []
                 ep += 1 if truthy else 0
-            # loop index getters and setters
-            elif lex[ep].lexeme == "e":
-                if numLoops > 0:
+            # loop index and limit getters and setters
+            elif lex[ep].lexeme == "e" and len(executionStack) > 0:
                     currentStack.append(executionStack[-1])
-            elif lex[ep].lexeme == "ø":
-                if numLoops > 0:
+            elif lex[ep].lexeme == "ø" and len(executionStack) > 0:
                     executionStack[-1] = currentStack.pop()
+            elif lex[ep].lexeme == "æ" and len(executionStack) > 1:
+                    currentStack.append(executionStack[-2])
+            elif lex[ep].lexeme == "œ" and len(executionStack) > 1:
+                    executionStack[-2] = currentStack.pop()
             # voicing
             elif lex[ep].lexeme == "ɸ":
                 currentStack = unvoiced
