@@ -37,9 +37,9 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
             currentStack[-2] = a
             currentStack[-3] = b
     elif instruction == "c":
-        ints = list(filter(lambda x: type(x) == int, currentStack))
-        strs = list(filter(lambda x: type(x) == str, currentStack))
-        lsts = list(filter(lambda x: type(x) == list, currentStack))
+        ints = list(filter(lambda x: type(x) is int, currentStack))
+        strs = list(filter(lambda x: type(x) is str, currentStack))
+        lsts = list(filter(lambda x: type(x) is list, currentStack))
         ints.sort()
         strs.sort()
         currentStack = lsts + strs + ints
@@ -50,42 +50,42 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
 
 # Comparisons and Logical Operators
     elif instruction == "ɨ":
-        if type(currentStack[-1]) != list and type(currentStack[-2]) != list:
+        if type(currentStack[-1]) is not list and type(currentStack[-2]) is not list:
             b = currentStack.pop()
             a = currentStack.pop()
             currentStack.append(1 if a > b else 0)
     elif instruction == "ʉ":
-        if type(currentStack[-1]) != list and type(currentStack[-2]) != list:
+        if type(currentStack[-1]) is not list and type(currentStack[-2]) is not list:
             b = currentStack.pop()
             a = currentStack.pop()
             currentStack.append(1 if a >= b else 0)
     elif instruction == "ə":
-        if type(currentStack[-1]) == type(currentStack[-2]):
+        if type(currentStack[-1]) is type(currentStack[-2]):
             b = currentStack.pop()
             a = currentStack.pop()
             currentStack.append(1 if a == b else 0)
     elif instruction == "ɘ":
-        if type(currentStack[-1]) != list and type(currentStack[-2]) != list:
+        if type(currentStack[-1]) is not list and type(currentStack[-2]) is not list:
             b = currentStack.pop()
             a = currentStack.pop()
             currentStack.append(1 if a < b else 0)
     elif instruction == "ɵ":
-        if type(currentStack[-1]) != list and type(currentStack[-2]) != list:
+        if type(currentStack[-1]) is not list and type(currentStack[-2]) is not list:
             b = currentStack.pop()
             a = currentStack.pop()
             currentStack.append(1 if a <= b else 0)
     elif instruction == "ɜ":
-        if type(currentStack[-1]) != list and type(currentStack[-2]) != list:
+        if type(currentStack[-1]) is not list and type(currentStack[-2]) is not list:
             b = currentStack.pop()
             a = currentStack.pop()
             currentStack.append(1 if a and b else 0)
     elif instruction == "ɞ":
-        if type(currentStack[-1]) != list and type(currentStack[-2]) != list:
+        if type(currentStack[-1]) is not list and type(currentStack[-2]) is not list:
             b = currentStack.pop()
             a = currentStack.pop()
             currentStack.append(1 if a or b else 0)
     elif instruction == "ɐ":
-        if type(currentStack[-1]) != list:
+        if type(currentStack[-1]) is not list:
             a = currentStack.pop()
             currentStack.append(1 if not a else 0)
 
@@ -268,7 +268,7 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
                         continue
                     elif lexes[ep].token == util.Token.LISTBEGIN:
                         numList = 1
-                        list = "["
+                        l = "["
                         while numList > 0:
                             ep += 1
                             if lexes[ep].token == util.Token.NUMBER:
@@ -277,14 +277,14 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
                                     if d in string.ascii_letters:
                                         base = 36
                                         break
-                                list += str(util.convert_base(lexes[ep].lexeme, base))
+                                l += str(util.convert_base(lexes[ep].lexeme, base))
                             else:
-                                list += lexes[ep].lexeme if lexes[ep].token != util.Token.LISTSEP else ","
+                                l += lexes[ep].lexeme if lexes[ep].token != util.Token.LISTSEP else ","
                             if lexes[ep].token == util.Token.LISTBEGIN:
                                 numList += 1
                             if lexes[ep].token == util.Token.LISTEND:
                                 numList -= 1
-                        outputList = eval(list)
+                        outputList = eval(l)
                         break
                     elif lexes[ep].token == util.Token.END:
                         break
@@ -299,7 +299,7 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
         print(currentStack.pop())
     elif instruction == "ɤ":
         out = ""
-        if type(currentStack[-1]) == list:
+        if type(currentStack[-1]) is list:
             for e in currentStack.pop():
                 out += str(e)
         print(out)
