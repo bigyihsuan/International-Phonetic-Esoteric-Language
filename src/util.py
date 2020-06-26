@@ -84,12 +84,17 @@ def convert_base(s, base=10):
     else:
         bef, aft = s.split(".")
     for i in enumerate(reversed(bef)):
-        integer = digits[i[1]]
-        if integer >= base: raise ValueError
+        if i[1] in digits:
+            integer = digits[i[1]]
+            if integer >= base: raise ValueError
+        else:
+            integer = 0
         ret += base**i[0] * integer
     if "." not in s: return ret
     for i in enumerate(aft):
         integer = digits[i[1]]
         if integer >= base: raise ValueError
         ret += base**-(i[0] + 1) * integer
+    if "-" in s:
+        ret = -ret
     return ret
