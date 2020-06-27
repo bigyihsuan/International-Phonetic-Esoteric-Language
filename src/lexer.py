@@ -82,15 +82,20 @@ def getNextToken(code):
                 return (code[start+len(lexeme):], Lex(T.COMMENT, lexeme))
 
         elif lexstate == LS.INSTRING:
-            if c == '\\':
-                sawEscape = True
-                lexeme += c
-            else:
-                lexeme += c
-            if c == '"' and not sawEscape:
-                return (code[start+len(lexeme):], Lex(T.STRING, bytearray(lexeme, "utf-8").decode("unicode_escape")))
             if sawEscape:
                 sawEscape = False
+                lexeme += c
+                strPos += 1
+                continue
+            if c in "\\":
+                sawEscape = True
+                lexeme += c
+                strPos += 1
+                continue
+            else:
+                lexeme += c
+            if c in '"':
+                return (code[start+len(lexeme):], Lex(T.STRING, bytearray(lexeme, "utf-8").decode("unicode_escape"))) # bytearray(lexeme, "utf-8").decode("unicode_escape")
 
         elif lexstate == LS.INNUMBER:
             lexeme += c

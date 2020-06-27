@@ -233,6 +233,7 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
     elif instruction == "ɪ":
         ele = input()
         try:
+            # multi-digit
             if len(ele) > 0 and "{" in ele[0] and "}" in ele[-1]:
                 base = 10
                 for d in ele:
@@ -240,8 +241,10 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
                         base = 36
                         break
                 ele = util.convert_base(ele[1:-1], base)
+            # single digit
             elif ele in string.digits:
                 ele = eval(ele)
+            # list
             elif len(ele) > 0 and "[" in ele[0] and "]" in ele[-1]:
                 # copy-pasted from interpreter.py and evaluator.py
                 import lexer, parser
@@ -289,8 +292,10 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
                     elif lexes[ep].token == util.Token.END:
                         break
                 ele = outputList
+            # string
             elif len(ele) > 0 and '"' in ele[0] and '"' in ele[-1]:
                 ele = eval(ele)
+            # default to the input string
             else:
                 ele = ele
         finally:
