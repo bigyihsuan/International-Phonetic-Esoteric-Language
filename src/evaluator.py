@@ -23,7 +23,7 @@ def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack, currentStack
         print("Unvoiced:", unvoiced)
         print("Voiced:", voiced)
         print("Execution:", executionStack)
-        print("Register:", register)
+        print("Register:", repr(register))
         print()
 
     executionDepth = 0
@@ -150,7 +150,7 @@ def evaluate(lex, lab, debugmode, unvoiced, voiced, executionStack, currentStack
                 print("Unvoiced:", unvoiced)
                 print("Voiced:", voiced, "<-- currentStack")
             print("Execution:", executionStack)
-            print("Register:", register)
+            print("Register:", repr(register))
             print()
         ep += 1
     return (currentStack, otherStack)
