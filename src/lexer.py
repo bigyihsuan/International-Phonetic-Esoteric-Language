@@ -29,6 +29,14 @@ def getNextToken(code):
     c = ""
     sawEscape = False
     strPos = 0
+    char_dict = {
+        "[": T.LISTBEGIN,
+        "]": T.LISTEND,
+        ".": T.LISTSEP,
+        "ɑ": T.LOOPSTART,
+        "ɒ": T.LOOPEND,
+        "ɛ": T.LOOPEXIT
+    }
     while True:
         if strPos == len(code):
             return ("", Lex(T.END, ""))
@@ -61,18 +69,8 @@ def getNextToken(code):
                 return (code[strPos+len(lexeme)+padding:], Lex(T.FUNDEFEND, c))
             elif c == "|":
                 lexstate = LS.INLABEL
-            elif c == "[":
-                return (code[strPos+len(lexeme):], Lex(T.LISTBEGIN, lexeme))
-            elif c == "]":
-                return (code[strPos+len(lexeme):], Lex(T.LISTEND, lexeme))
-            elif c == ".":
-                return (code[strPos+len(lexeme):], Lex(T.LISTSEP, lexeme))
-            elif c == "ɑ":
-                return (code[strPos+len(lexeme):], Lex(T.LOOPSTART, lexeme))
-            elif c == "ɒ":
-                return (code[strPos+len(lexeme):], Lex(T.LOOPEND, lexeme))
-            elif c == "ɛ":
-                return (code[strPos+len(lexeme):], Lex(T.LOOPEXIT, lexeme))
+            elif c in char_dict:
+                return (code[strPos+len(lexeme):], Lex(char_dict[c], lexeme))
             else:
                 lexstate = LS.ININSTRUCTION
 
