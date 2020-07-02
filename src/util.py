@@ -43,9 +43,9 @@ class EvalState(Flag):
     DEFAULT = auto()
     CALLING = auto()
 
-digits = {str(k):k for k in range(10)}            # numbers
-d.update({chr(k):k - 55 for k in range(65, 91)})  # uppercase alphabet
-d.update({chr(k):k - 87 for k in range(97, 123)}) # lowercase alphabet
+digits = {str(k):k for k in range(10)}                 # numbers
+digits.update({chr(k):k - 55 for k in range(65, 91)})  # uppercase alphabet
+digits.update({chr(k):k - 87 for k in range(97, 123)}) # lowercase alphabet
 
 # https://stackoverflow.com/a/20170279/8143168
 def convert_base(s, base=10):
