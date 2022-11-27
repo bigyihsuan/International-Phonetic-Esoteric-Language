@@ -9,59 +9,74 @@ from parser import Parser as P
 from evaluator import evaluate
 import os
 
-labels = {} # Maps a  label to a location in code.
-            # Also maps the name of a function to its definition location.
-lexemes = [] # List of lexemes.
-parser = P()
+def printUsage():
+    print("Usage:")
+    print("python3 interpreter.py (options) (code)")
+    print()
+    print("Options:")
+    print("    -d:          Debug mode. Print label mappings, parsed lexemes, data stack, and execution stacks.")
+    print("    -f filename: Use the file `filename` as the code source input.")
 
-# Stacks
-unvoiced = []
-voiced = []
-executionStack = []
+def main():
+    labels = {} # Maps a  label to a location in code.
+                # Also maps the name of a function to its definition location.
+    lexemes = [] # List of lexemes.
+    parser = P()
 
-# Register
-register = None
+    # Stacks
+    unvoiced = []
+    voiced = []
+    executionStack = []
 
-currentStack = unvoiced
-otherStack = voiced
+    # Register
+    register = None
 
-debugmode = False
+    currentStack = unvoiced
+    otherStack = voiced
 
-if len(sys.argv) > 1:
-    foundFile = -1
-    for i in range(1, len(sys.argv)):
-        if os.path.isfile(sys.argv[i]):
-            foundFile = i
+    debugmode = False
+    usingfile = -1
 
-    if sys.argv[1] == "-d":
-        debugmode = True
+    if len(sys.argv) > 1:
+        foundFile = -1
+        for i, arg in enumerate(sys.argv):
+            if arg == "-d":
+                debugmode = True
+            if arg == "-f":
+                usingfile = i
 
-    if foundFile == -1:
-        code = sys.argv[2] if debugmode else sys.argv[1]
-    else:
-        source = open(sys.argv[foundFile], "r")
-        code = source.read()
+        if usingfile > -1 and len(sys.argv) > usingfile + 1:
+            source = open(sys.argv[usingfile + 1], "r")
+            code = source.read()
+        elif usingfile != -1:
+            print("not enough arguments for using file")
+            printUsage()
+            return
+        else:
+            code = sys.argv[len(sys.argv)-1]
 
-    code += " "
-    lastlex = lexer.Lex(T.BEGIN, "")
-    while lastlex.token != T.END:
-        code, lex = parser.getNextToken(code)
-        if (lex.token != T.COMMENT):
-            lexemes.append(lex)
-        lastlex = lex
-        if lastlex.token == T.ERR:
-            print("LEXING ERROR:", lastlex.lexeme)
+        code += " "
+        lastlex = lexer.Lex(T.BEGIN, "")
+        while lastlex.token != T.END:
+            code, lex = parser.getNextToken(code)
+            if (lex.token != T.COMMENT):
+                lexemes.append(lex)
+            lastlex = lex
+            if lastlex.token == T.ERR:
+                print("LEXING ERROR:", lastlex.lexeme)
+                os.abort()
+
+        parser.mapLabels(lexemes, labels)
+        if debugmode:
+            print("Lexemes:", lexemes)
+            print("Label Mapping:", labels)
+
+        if not parser.validateLexemes(lexemes, labels):
             os.abort()
 
-    parser.mapLabels(lexemes, labels)
-    if debugmode:
-        print("Lexemes:", lexemes)
-        print("Label Mapping:", labels)
+        currentStack, otherStack = evaluate(lexemes, labels, debugmode, unvoiced, voiced, executionStack, currentStack, otherStack, register)
+    else:
+        printUsage()
 
-    if not parser.validateLexemes(lexemes, labels):
-        os.abort()
-
-    currentStack, otherStack = evaluate(lexemes, labels, debugmode, unvoiced, voiced, executionStack, currentStack, otherStack, register)
-else:
-    print("Code file not found")
-
+if __name__ == "__main__":
+    main()

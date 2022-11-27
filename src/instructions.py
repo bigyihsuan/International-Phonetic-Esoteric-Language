@@ -1,6 +1,6 @@
 import math, string, util
 
-def executeInstruction(instruction, unvoiced, voiced, currentStack):
+def executeInstruction(instruction: str, unvoiced: list, voiced: list, currentStack: list):
     """
     This file defines the majority of 1-character instructions in IPEL.
     Input is an instruction, the 2 stacks, and the current stack.
@@ -223,6 +223,11 @@ def executeInstruction(instruction, unvoiced, voiced, currentStack):
             for e in currentStack.pop():
                 out += str(e)
         currentStack.append(out)
+    elif instruction == "ʔ":
+        if len(currentStack) >= 2:
+            if type(currentStack[-2]) == list or type(currentStack[-2]) == str:
+                e = currentStack.pop()
+                currentStack.append(e in currentStack[-1])
 # IO
     elif instruction == "i":
         currentStack.append(input().strip())
